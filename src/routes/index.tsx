@@ -1030,6 +1030,7 @@ function Index() {
     <main className="relative min-h-screen bg-black text-white overflow-x-hidden">
       <Navbar />
       <Hero />
+      <About />
       <Services />
       <Projects />
       <Pricing />
