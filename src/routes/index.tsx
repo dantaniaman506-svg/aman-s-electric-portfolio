@@ -2,7 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   Hero,
   AboutSection,
+  ReviewsSection,
+  ServicesSection,
   ProjectsSection,
+  PricingSection,
   ContactSection,
 } from "@/components/site/shared";
 
@@ -30,8 +33,11 @@ function Index() {
   return (
     <>
       <Hero />
-      <AboutSection compact />
-      <ProjectsSection limit={2} />
+      <AboutSection />
+      <ReviewsSection />
+      <ServicesSection />
+      <ProjectsSection />
+      <PricingSection />
       <ContactSection />
     </>
   );
