@@ -334,32 +334,14 @@ export function GlobalTouchEffect() {
               animation: "touch-dot 0.45s ease-out forwards",
             }}
           />
-          {/* Ring 1 — fast inner */}
+          {/* Single large expanding ring */}
           <span
             className="absolute rounded-full"
             style={{
-              width: 56, height: 56,
-              border: "1.5px solid rgba(61,169,255,0.9)",
-              boxShadow: "0 0 8px rgba(10,132,255,0.4)",
-              animation: "touch-ring-1 0.55s cubic-bezier(0.2,1,0.4,1) forwards",
-            }}
-          />
-          {/* Ring 2 — medium */}
-          <span
-            className="absolute rounded-full"
-            style={{
-              width: 90, height: 90,
-              border: "1px solid rgba(10,132,255,0.6)",
-              animation: "touch-ring-2 0.75s 0.05s cubic-bezier(0.2,1,0.4,1) forwards",
-            }}
-          />
-          {/* Ring 3 — slow outer */}
-          <span
-            className="absolute rounded-full"
-            style={{
-              width: 130, height: 130,
-              border: "0.5px solid rgba(10,132,255,0.3)",
-              animation: "touch-ring-3 1s 0.1s cubic-bezier(0.2,1,0.4,1) forwards",
+              width: 120, height: 120,
+              border: "1.5px solid rgba(61,169,255,0.85)",
+              boxShadow: "0 0 10px rgba(10,132,255,0.25), inset 0 0 10px rgba(10,132,255,0.05)",
+              animation: "touch-ring-3 0.75s cubic-bezier(0.2,1,0.4,1) forwards",
             }}
           />
         </div>
@@ -867,9 +849,9 @@ export const PROJECTS = [
     name: "Pristine Smiles Studio",
     tag: "Dental Studio",
     url: "https://pristine-smiles-studio.vercel.app/",
-    desc: "Premium dental studio site with treatment menu, gallery and conversion-focused booking flow.",
+    desc: "Premium dental studio website with treatment menu, gallery and conversion-focused booking flow.",
     accent: "#0a84ff",
-    icon: "🦷",
+    num: "01",
   },
   {
     name: "Artful Smiles",
@@ -877,121 +859,162 @@ export const PROJECTS = [
     url: "https://artful-smiles-web.vercel.app/",
     desc: "Elegant dental clinic website with appointment booking, services showcase and patient-friendly UX.",
     accent: "#3da9ff",
-    icon: "✨",
+    num: "02",
   },
   {
     name: "Gentle Smiles Dental",
     tag: "Dental Practice",
     url: "https://gentle-smiles-dental.dantaniaman506.workers.dev/",
-    desc: "Modern dental practice website hosted on edge — fast load, calming UI, clear CTAs.",
+    desc: "Modern dental practice site hosted on edge — lightning fast, calming UI, clear calls to action.",
     accent: "#1e40af",
-    icon: "💎",
+    num: "03",
   },
   {
     name: "Pixel Perfect Pages",
-    tag: "Agency Landing",
+    tag: "Agency Landing Page",
     url: "https://pixel-perfect-pages-chi.vercel.app/",
     desc: "Pixel-perfect agency landing page with rich animations, sticky nav and crisp typography.",
     accent: "#2563eb",
-    icon: "🚀",
+    num: "04",
   },
 ];
 
+function ProjectCard({ p, featured = false }: { p: typeof PROJECTS[0]; featured?: boolean }) {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const thumbUrl = `https://image.thum.io/get/width/1200/crop/675/noanimate/${p.url}`;
+
+  return (
+    <TapCard
+      href={p.url}
+      className={`block glass overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_-30px_rgba(10,132,255,0.5)] hover:border-electric/50 ${featured ? "rounded-3xl" : "rounded-2xl"}`}
+    >
+      {/* Screenshot preview */}
+      <div
+        className={`relative overflow-hidden ${featured ? "aspect-[16/8]" : "aspect-[16/9]"}`}
+        style={{ background: `linear-gradient(135deg, #060a14 0%, ${p.accent}18 60%, #030609 100%)` }}
+      >
+        {/* Fallback bg pattern */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle, ${p.accent}20 1px, transparent 1px)`,
+            backgroundSize: "24px 24px",
+          }}
+        />
+
+        {/* Real screenshot via thum.io */}
+        {!imgError && (
+          <img
+            src={thumbUrl}
+            alt={`${p.name} screenshot`}
+            loading="lazy"
+            onLoad={() => setImgLoaded(true)}
+            onError={() => setImgError(true)}
+            className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 ${imgLoaded ? "opacity-100 scale-100" : "opacity-0 scale-[1.03]"}`}
+          />
+        )}
+
+        {/* Dark overlay — heavier at bottom for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+
+        {/* Top browser bar */}
+        <div
+          className="absolute top-0 inset-x-0 h-7 flex items-center gap-2 px-3 z-10"
+          style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)" }}
+        >
+          <div className="flex gap-1.5 flex-shrink-0">
+            <span className="h-2 w-2 rounded-full bg-white/20" />
+            <span className="h-2 w-2 rounded-full bg-white/20" />
+            <span className="h-2 w-2 rounded-full bg-white/20" />
+          </div>
+          <div className="flex-1 mx-2 h-3.5 rounded-full bg-white/10 flex items-center px-2 overflow-hidden">
+            <span className="text-[8px] text-white/40 truncate leading-none">
+              {p.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+            </span>
+          </div>
+          <div
+            className="flex-shrink-0 flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-semibold text-white opacity-0 group-hover:opacity-100 transition-all duration-300"
+            style={{ background: p.accent }}
+          >
+            <ExternalLink className="h-2.5 w-2.5" /> Open
+          </div>
+        </div>
+
+        {/* Bottom meta */}
+        <div className="absolute bottom-0 inset-x-0 p-4 z-10 flex items-end justify-between">
+          <div>
+            <span
+              className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide"
+              style={{ background: `${p.accent}30`, color: p.accent, border: `1px solid ${p.accent}50` }}
+            >
+              {p.tag}
+            </span>
+          </div>
+          <span className="text-4xl font-black text-white/10 leading-none select-none">{p.num}</span>
+        </div>
+      </div>
+
+      {/* Card body */}
+      <div className={`${featured ? "p-7" : "p-5"}`}>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h3 className={`font-bold text-white leading-snug ${featured ? "text-xl" : "text-base"}`}>{p.name}</h3>
+            <p className="mt-1.5 text-sm text-white/55 leading-relaxed">{p.desc}</p>
+          </div>
+          <div
+            className="flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:-rotate-6"
+            style={{ background: `${p.accent}20`, border: `1px solid ${p.accent}40` }}
+          >
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" style={{ color: p.accent }} />
+          </div>
+        </div>
+        <div className="mt-4 flex items-center gap-2 text-xs text-electric-glow/60">
+          <Globe className="h-3 w-3 flex-shrink-0" />
+          <span className="truncate">{p.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}</span>
+        </div>
+      </div>
+    </TapCard>
+  );
+}
+
 export function ProjectsSection() {
   const ref = useReveal<HTMLDivElement>();
+  const [featured, ...rest] = PROJECTS;
+
   return (
     <section id="projects" className="relative py-20 sm:py-28">
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 80% 50% at 50% 30%, rgba(10,132,255,0.07), transparent 70%)" }}
+      />
       <div className="mx-auto max-w-6xl px-6">
         <SectionTitle
           kicker="Selected Work"
           title={<>Live <span className="text-gradient">Projects</span></>}
-          subtitle="Real client websites — shipped, live and converting. Click any card to visit."
+          subtitle="Real client websites — built, live, and converting. Click any card to visit live."
         />
-        <div ref={ref} className="reveal mt-16 grid gap-5 md:grid-cols-2">
-          {PROJECTS.map((p, i) => (
-            <TapCard
-              key={p.url}
-              href={p.url}
-              className="block rounded-3xl glass hover:-translate-y-2 hover:border-electric/50 hover:shadow-[0_30px_80px_-30px_rgba(10,132,255,0.45)] overflow-hidden"
-            >
-              {/* Blank preview area — clean dark card with subtle texture */}
-              <div
-                className="relative aspect-[16/9] overflow-hidden"
-                style={{ background: `linear-gradient(135deg, #070b18 0%, ${p.accent}14 60%, #040810 100%)` }}
-              >
-                {/* Subtle dot grid */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    backgroundImage: `radial-gradient(circle, ${p.accent}25 1px, transparent 1px)`,
-                    backgroundSize: "28px 28px",
-                  }}
-                />
-                {/* Center glow */}
-                <div
-                  className="absolute inset-0 flex items-center justify-center"
-                  style={{ background: `radial-gradient(ellipse 60% 50% at 50% 50%, ${p.accent}18, transparent 70%)` }}
-                />
-                {/* Large faded icon */}
-                <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none">
-                  <span className="text-7xl opacity-20">{p.icon}</span>
-                </div>
-                {/* Browser bar mockup at top */}
-                <div className="absolute top-0 inset-x-0 h-8 flex items-center gap-2 px-4 border-b border-white/5" style={{ background: "rgba(0,0,0,0.4)" }}>
-                  <div className="flex gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-white/15" />
-                    <span className="h-2 w-2 rounded-full bg-white/15" />
-                    <span className="h-2 w-2 rounded-full bg-white/15" />
-                  </div>
-                  <div className="flex-1 mx-3 h-3.5 rounded-full bg-white/8 flex items-center px-2">
-                    <span className="text-[8px] text-white/25 truncate">
-                      {p.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-                    </span>
-                  </div>
-                </div>
-                {/* Tag + visit badge */}
-                <div className="absolute inset-x-4 bottom-4 flex items-center justify-between">
-                  <span className="rounded-full px-3 py-1 text-xs font-medium border border-white/10 bg-black/50 backdrop-blur text-white/70">
-                    {p.tag}
-                  </span>
-                  <span
-                    className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold text-white opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-y-0 translate-y-1"
-                    style={{ background: p.accent, boxShadow: `0 8px 24px -6px ${p.accent}99` }}
-                  >
-                    Visit <ExternalLink className="h-3 w-3" />
-                  </span>
-                </div>
-              </div>
 
-              {/* Card body */}
-              <div className="p-6">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="text-base sm:text-lg font-semibold text-white leading-snug">{p.name}</h3>
-                    <p className="mt-1.5 text-sm text-white/55 leading-relaxed">{p.desc}</p>
-                  </div>
-                  <div className="flex-shrink-0 mt-0.5">
-                    <div
-                      className="h-9 w-9 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110"
-                      style={{ background: `${p.accent}22`, border: `1px solid ${p.accent}44` }}
-                    >
-                      <ArrowRight className="h-4 w-4" style={{ color: p.accent }} />
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center gap-2">
-                  <Globe className="h-3 w-3 text-white/30 flex-shrink-0" />
-                  <span className="text-xs text-electric-glow/70 truncate">
-                    {p.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-                  </span>
-                </div>
-              </div>
-            </TapCard>
-          ))}
+        <div ref={ref} className="reveal mt-14 space-y-5">
+          {/* Featured — full width */}
+          <ProjectCard p={featured} featured />
+
+          {/* Rest — 3 in a row on desktop, 1 col on mobile */}
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {rest.map((p) => (
+              <ProjectCard key={p.url} p={p} />
+            ))}
+          </div>
         </div>
 
         <div className="mt-10 text-center">
-          <p className="text-sm text-white/40">More projects coming soon — <a href={WHATSAPP} target="_blank" rel="noreferrer" className="text-electric-glow hover:underline">ask me directly</a></p>
+          <p className="text-sm text-white/35">
+            More projects coming soon —{" "}
+            <a href={WHATSAPP} target="_blank" rel="noreferrer" className="text-electric-glow/70 hover:text-electric-glow transition-colors hover:underline underline-offset-2">
+              ask me directly
+            </a>
+          </p>
         </div>
       </div>
     </section>
