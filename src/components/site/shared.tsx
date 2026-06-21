@@ -419,23 +419,64 @@ export function Navbar() {
 
 /* ============ Footer ============ */
 export function Footer() {
+  const links = [
+    { label: "Home", id: "home" },
+    { label: "About", id: "about" },
+    { label: "Projects", id: "projects" },
+    { label: "Pricing", id: "pricing" },
+    { label: "FAQ", id: "faq" },
+  ];
   return (
-    <footer className="relative border-t border-white/10 py-10 mt-10">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 sm:flex-row">
-        <div className="flex items-center gap-3">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-electric to-electric-deep text-white font-bold">
-            AD
-          </span>
-          <div className="text-sm text-white/60">
-            © {new Date().getFullYear()} Aman Dantani · Website Development
+    <footer className="relative border-t border-white/8 pt-12 pb-8 mt-6">
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 60% 40% at 50% 100%, rgba(10,132,255,0.07), transparent 80%)" }}
+      />
+      <div className="mx-auto max-w-6xl px-6">
+        {/* Top row */}
+        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-8 mb-10">
+          {/* Brand */}
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-electric to-electric-deep text-white font-bold text-sm shadow-[0_8px_24px_-8px_rgba(10,132,255,0.6)]">
+                AD
+              </span>
+              <div>
+                <div className="text-sm font-semibold text-white">Aman Dantani</div>
+                <div className="text-[11px] text-white/40">Website Developer</div>
+              </div>
+            </div>
+            <p className="text-xs text-white/40 max-w-xs leading-relaxed">
+              Building premium websites for doctors, founders and businesses across India. Fast. Clean. Conversion-focused.
+            </p>
+          </div>
+          {/* Nav links */}
+          <div className="flex flex-wrap justify-center sm:justify-end gap-x-6 gap-y-2">
+            {links.map((l) => (
+              <button
+                key={l.id}
+                onClick={() => scrollTo(l.id)}
+                className="text-sm text-white/50 hover:text-electric-glow transition-colors"
+              >
+                {l.label}
+              </button>
+            ))}
+            <a href={WHATSAPP} target="_blank" rel="noreferrer" className="text-sm text-electric-glow/80 hover:text-electric-glow transition-colors font-medium">
+              Hire Me →
+            </a>
           </div>
         </div>
-        <div className="flex items-center gap-4 text-sm text-white/60">
-          <button onClick={() => scrollTo("pricing")} className="hover:text-white transition-colors">Pricing</button>
-          <button onClick={() => scrollTo("projects")} className="hover:text-white transition-colors">Projects</button>
-          <a href={WHATSAPP} target="_blank" rel="noreferrer" className="hover:text-electric-glow transition-colors">
-            WhatsApp
-          </a>
+
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+        {/* Bottom row */}
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/30">
+          <span>© {new Date().getFullYear()} Aman Dantani. All rights reserved.</span>
+          <span className="flex items-center gap-1">
+            Made with <span className="text-electric-glow">♥</span> using React + Tailwind
+          </span>
         </div>
       </div>
     </footer>
@@ -572,29 +613,35 @@ export function AboutSection() {
       <div ref={ref} className="reveal mx-auto max-w-6xl px-6 grid gap-12 lg:grid-cols-2 lg:items-center">
         {/* Photo */}
         <div className="relative mx-auto w-full max-w-sm">
+          {/* Blurred glow behind card */}
           <div
             aria-hidden
-            className="absolute -inset-6 rounded-[2.5rem] opacity-60 blur-3xl"
-            style={{
-              background: "conic-gradient(from 0deg, #0a84ff, #3da9ff, #1e40af, #0a84ff)",
-              animation: "border-spin 14s linear infinite",
-            }}
+            className="absolute -inset-8 rounded-[2.5rem] opacity-50 blur-3xl pointer-events-none"
+            style={{ background: "radial-gradient(ellipse at center, rgba(10,132,255,0.5), rgba(30,64,175,0.3), transparent 70%)" }}
           />
-          <div
-            className="relative rounded-[2rem] p-[2px]"
-            style={{ background: "conic-gradient(from 0deg, #0a84ff, #3da9ff, #1e40af, #0a84ff)", animation: "border-spin 14s linear infinite" }}
-          >
-            <div className="relative overflow-hidden rounded-[1.9rem] bg-black">
+          {/* Card with static animated-border */}
+          <div className="relative rounded-[2rem] p-[2px] overflow-hidden">
+            {/* The spinning gradient ONLY for the border — stays inside overflow:hidden */}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-[-100%] block"
+              style={{
+                background: "conic-gradient(from 0deg, #0a84ff 0%, #3da9ff 25%, #1e40af 50%, #3da9ff 75%, #0a84ff 100%)",
+                animation: "border-spin 6s linear infinite",
+              }}
+            />
+            {/* Static image layer — not affected by the spin */}
+            <div className="relative overflow-hidden rounded-[1.85rem] bg-black">
               <img
                 src="/aman.jpg"
                 alt="Aman Dantani — Website Developer"
                 loading="lazy"
-                className="block w-full h-auto object-cover aspect-[3/4] transition-transform duration-700 hover:scale-105"
+                className="block w-full h-auto object-cover object-center aspect-[3/4] transition-transform duration-700 hover:scale-105"
               />
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0"
-                style={{ background: "linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.9) 100%)" }}
+                style={{ background: "linear-gradient(180deg, transparent 52%, rgba(0,0,0,0.88) 100%)" }}
               />
               <div className="absolute left-4 bottom-4 right-4 flex items-center justify-between">
                 <div className="glass rounded-full px-4 py-2 text-xs font-semibold text-white flex items-center gap-2">
@@ -654,6 +701,21 @@ export function AboutSection() {
                 <div className="text-xs text-electric-glow">{b}</div>
               </div>
             ))}
+          </div>
+
+          {/* Tech stack */}
+          <div className="mt-7">
+            <div className="text-[10px] uppercase tracking-widest text-white/40 mb-3">Tech Stack</div>
+            <div className="flex flex-wrap gap-2">
+              {["React", "TypeScript", "Tailwind CSS", "Vite", "Next.js", "Vercel", "Cloudflare", "Figma"].map((tech) => (
+                <span
+                  key={tech}
+                  className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/70 transition-all hover:border-electric/40 hover:text-electric-glow hover:bg-electric/5"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -743,94 +805,34 @@ export const PROJECTS = [
     tag: "Dental Studio",
     url: "https://pristine-smiles-studio.vercel.app/",
     desc: "Premium dental studio site with treatment menu, gallery and conversion-focused booking flow.",
-    preview: "/pristine-preview.jpg",
     accent: "#0a84ff",
+    icon: "🦷",
   },
   {
     name: "Artful Smiles",
     tag: "Dental Clinic",
     url: "https://artful-smiles-web.vercel.app/",
     desc: "Elegant dental clinic website with appointment booking, services showcase and patient-friendly UX.",
-    preview: null,
     accent: "#3da9ff",
+    icon: "✨",
   },
   {
     name: "Gentle Smiles Dental",
     tag: "Dental Practice",
     url: "https://gentle-smiles-dental.dantaniaman506.workers.dev/",
     desc: "Modern dental practice website hosted on edge — fast load, calming UI, clear CTAs.",
-    preview: null,
     accent: "#1e40af",
+    icon: "💎",
   },
   {
     name: "Pixel Perfect Pages",
     tag: "Agency Landing",
     url: "https://pixel-perfect-pages-chi.vercel.app/",
     desc: "Pixel-perfect agency landing page with rich animations, sticky nav and crisp typography.",
-    preview: null,
     accent: "#2563eb",
+    icon: "🚀",
   },
 ];
-
-function ProjectThumb({ project }: { project: typeof PROJECTS[0] }) {
-  const [loaded, setLoaded] = useState(false);
-  const [errored, setErrored] = useState(false);
-
-  const screenshotUrl = project.preview
-    ? project.preview
-    : `https://image.thum.io/get/width/1200/crop/750/noanimate/${project.url}`;
-
-  return (
-    <div className="relative aspect-[16/10] overflow-hidden bg-[#04060d]">
-      {/* Gradient background placeholder (always shown, hidden if image loads) */}
-      <div
-        className={`absolute inset-0 transition-opacity duration-500 ${loaded && !errored ? "opacity-0" : "opacity-100"}`}
-        style={{
-          background: `linear-gradient(135deg, #04060d 0%, ${project.accent}22 50%, #08102a 100%)`,
-        }}
-      >
-        {/* Decorative grid lines in placeholder */}
-        <div className="absolute inset-0" style={{
-          backgroundImage: `linear-gradient(${project.accent}18 1px, transparent 1px), linear-gradient(90deg, ${project.accent}18 1px, transparent 1px)`,
-          backgroundSize: "40px 40px",
-        }} />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <Globe className="h-10 w-10 mx-auto mb-3" style={{ color: project.accent, opacity: 0.5 }} />
-            <div className="text-xs text-white/30 font-medium">{project.name}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Actual screenshot */}
-      {!errored && (
-        <img
-          src={screenshotUrl}
-          alt={project.name}
-          loading="lazy"
-          className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 ${loaded ? "opacity-100 scale-100" : "opacity-0 scale-105"}`}
-          onLoad={() => setLoaded(true)}
-          onError={() => setErrored(true)}
-        />
-      )}
-
-      {/* Gradient overlay */}
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"
-      />
-
-      <div className="absolute inset-x-4 bottom-4 flex items-center justify-between">
-        <span className="rounded-full bg-black/60 backdrop-blur px-3 py-1 text-xs text-white/90 border border-white/20">
-          {project.tag}
-        </span>
-        <span className="inline-flex items-center gap-1 rounded-full bg-electric px-3 py-1 text-xs font-semibold text-white shadow-[0_8px_30px_-6px_rgba(10,132,255,0.8)] opacity-0 group-hover:opacity-100 transition-opacity">
-          Visit <ExternalLink className="h-3 w-3" />
-        </span>
-      </div>
-    </div>
-  );
-}
 
 export function ProjectsSection() {
   const ref = useReveal<HTMLDivElement>();
@@ -840,29 +842,93 @@ export function ProjectsSection() {
         <SectionTitle
           kicker="Selected Work"
           title={<>Live <span className="text-gradient">Projects</span></>}
-          subtitle="Real client websites — shipped, live and converting. Tap any card to visit."
+          subtitle="Real client websites — shipped, live and converting. Click any card to visit."
         />
-        <div ref={ref} className="reveal mt-16 grid gap-6 md:grid-cols-2">
-          {PROJECTS.map((p) => (
+        <div ref={ref} className="reveal mt-16 grid gap-5 md:grid-cols-2">
+          {PROJECTS.map((p, i) => (
             <TapCard
               key={p.url}
               href={p.url}
-              className="block rounded-3xl glass hover:-translate-y-2 hover:border-electric/50 hover:shadow-[0_30px_80px_-30px_rgba(10,132,255,0.5)]"
+              className="block rounded-3xl glass hover:-translate-y-2 hover:border-electric/50 hover:shadow-[0_30px_80px_-30px_rgba(10,132,255,0.45)] overflow-hidden"
             >
-              <ProjectThumb project={p} />
-              <div className="p-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-white">{p.name}</h3>
-                  <ArrowRight className="h-5 w-5 text-white/40 transition-all group-hover:text-electric-glow group-hover:translate-x-1" />
+              {/* Blank preview area — clean dark card with subtle texture */}
+              <div
+                className="relative aspect-[16/9] overflow-hidden"
+                style={{ background: `linear-gradient(135deg, #070b18 0%, ${p.accent}14 60%, #040810 100%)` }}
+              >
+                {/* Subtle dot grid */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage: `radial-gradient(circle, ${p.accent}25 1px, transparent 1px)`,
+                    backgroundSize: "28px 28px",
+                  }}
+                />
+                {/* Center glow */}
+                <div
+                  className="absolute inset-0 flex items-center justify-center"
+                  style={{ background: `radial-gradient(ellipse 60% 50% at 50% 50%, ${p.accent}18, transparent 70%)` }}
+                />
+                {/* Large faded icon */}
+                <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none">
+                  <span className="text-7xl opacity-20">{p.icon}</span>
                 </div>
-                <p className="mt-2 text-sm text-white/60">{p.desc}</p>
-                <div className="mt-3 text-xs text-electric-glow/80 truncate flex items-center gap-1">
-                  <Globe className="h-3 w-3 flex-shrink-0" />
-                  {p.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                {/* Browser bar mockup at top */}
+                <div className="absolute top-0 inset-x-0 h-8 flex items-center gap-2 px-4 border-b border-white/5" style={{ background: "rgba(0,0,0,0.4)" }}>
+                  <div className="flex gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-white/15" />
+                    <span className="h-2 w-2 rounded-full bg-white/15" />
+                    <span className="h-2 w-2 rounded-full bg-white/15" />
+                  </div>
+                  <div className="flex-1 mx-3 h-3.5 rounded-full bg-white/8 flex items-center px-2">
+                    <span className="text-[8px] text-white/25 truncate">
+                      {p.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                    </span>
+                  </div>
+                </div>
+                {/* Tag + visit badge */}
+                <div className="absolute inset-x-4 bottom-4 flex items-center justify-between">
+                  <span className="rounded-full px-3 py-1 text-xs font-medium border border-white/10 bg-black/50 backdrop-blur text-white/70">
+                    {p.tag}
+                  </span>
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold text-white opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-y-0 translate-y-1"
+                    style={{ background: p.accent, boxShadow: `0 8px 24px -6px ${p.accent}99` }}
+                  >
+                    Visit <ExternalLink className="h-3 w-3" />
+                  </span>
+                </div>
+              </div>
+
+              {/* Card body */}
+              <div className="p-6">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="text-base sm:text-lg font-semibold text-white leading-snug">{p.name}</h3>
+                    <p className="mt-1.5 text-sm text-white/55 leading-relaxed">{p.desc}</p>
+                  </div>
+                  <div className="flex-shrink-0 mt-0.5">
+                    <div
+                      className="h-9 w-9 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110"
+                      style={{ background: `${p.accent}22`, border: `1px solid ${p.accent}44` }}
+                    >
+                      <ArrowRight className="h-4 w-4" style={{ color: p.accent }} />
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center gap-2">
+                  <Globe className="h-3 w-3 text-white/30 flex-shrink-0" />
+                  <span className="text-xs text-electric-glow/70 truncate">
+                    {p.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                  </span>
                 </div>
               </div>
             </TapCard>
           ))}
+        </div>
+
+        <div className="mt-10 text-center">
+          <p className="text-sm text-white/40">More projects coming soon — <a href={WHATSAPP} target="_blank" rel="noreferrer" className="text-electric-glow hover:underline">ask me directly</a></p>
         </div>
       </div>
     </section>
@@ -1208,46 +1274,87 @@ export function FAQSection() {
 export function ContactSection() {
   return (
     <section id="contact" className="relative py-20 sm:py-28">
-      <div className="mx-auto max-w-4xl px-6 text-center">
-        <SectionTitle
-          kicker="Let's Talk"
-          title={<>Ready to build <span className="text-gradient">something premium?</span></>}
-          subtitle="Tell me about your business — I usually reply within an hour on WhatsApp."
-        />
-        <div className="mt-12 grid gap-4 sm:grid-cols-2">
+      {/* Background glow */}
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 70% 60% at 50% 60%, rgba(10,132,255,0.13), transparent 70%)" }}
+      />
+      <div className="mx-auto max-w-4xl px-6">
+        {/* Hero CTA card */}
+        <div className="relative rounded-3xl overflow-hidden">
+          {/* Spinning border */}
+          <div className="absolute inset-0 rounded-3xl overflow-hidden">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-[-100%] block"
+              style={{
+                background: "conic-gradient(from 0deg, #0a84ff 0%, #3da9ff 25%, #1e40af 50%, #3da9ff 75%, #0a84ff 100%)",
+                animation: "border-spin 8s linear infinite",
+              }}
+            />
+          </div>
+          <div className="relative m-[1.5px] rounded-[calc(1.5rem-1.5px)] bg-[#04060d] px-8 py-12 text-center overflow-hidden">
+            {/* Inner glow */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{ background: "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(10,132,255,0.18), transparent 70%)" }}
+            />
+            <div className="relative">
+              <div className="inline-flex items-center gap-2 rounded-full border border-electric/30 bg-electric/10 px-4 py-1.5 text-xs font-medium text-electric-glow mb-6">
+                <Sparkles className="h-3 w-3" /> Let's Work Together
+              </div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+                Ready to build <span className="text-gradient">something premium?</span>
+              </h2>
+              <p className="mt-4 text-base text-white/60 max-w-xl mx-auto">
+                Tell me about your business — I usually reply within an hour on WhatsApp.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                <GlowButton href={WHATSAPP} className="!px-8 !py-4 !text-base">
+                  <MessageCircle className="h-5 w-5" /> Message on WhatsApp
+                </GlowButton>
+                <GlowButton href="mailto:dantaniaman506@gmail.com" variant="ghost" className="!px-8 !py-4 !text-base">
+                  <Mail className="h-5 w-5" /> Send an Email
+                </GlowButton>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Contact info cards */}
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <TapCard
             href={WHATSAPP}
-            className="block rounded-2xl glass p-6 text-left hover:-translate-y-1 hover:border-electric/50"
+            className="block rounded-2xl glass p-5 text-left hover:-translate-y-1 hover:border-electric/50 hover:shadow-[0_20px_50px_-20px_rgba(10,132,255,0.35)]"
           >
             <div className="flex items-center gap-4">
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-electric to-electric-deep text-white group-hover:rotate-6 transition-transform">
-                <MessageCircle className="h-6 w-6" />
+              <div className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-electric to-electric-deep text-white group-hover:rotate-6 transition-transform duration-300 shadow-[0_8px_20px_-6px_rgba(10,132,255,0.5)]">
+                <MessageCircle className="h-5 w-5" />
               </div>
-              <div>
-                <div className="text-xs uppercase tracking-widest text-white/50">WhatsApp</div>
-                <div className="text-lg font-semibold text-white">+91 6398505806</div>
+              <div className="min-w-0">
+                <div className="text-[10px] uppercase tracking-widest text-white/40">WhatsApp</div>
+                <div className="text-base font-semibold text-white">+91 6398505806</div>
               </div>
+              <ArrowRight className="h-4 w-4 text-white/20 ml-auto flex-shrink-0 transition-all group-hover:text-electric-glow group-hover:translate-x-1" />
             </div>
           </TapCard>
           <TapCard
             href="mailto:dantaniaman506@gmail.com"
-            className="block rounded-2xl glass p-6 text-left hover:-translate-y-1 hover:border-electric/50"
+            className="block rounded-2xl glass p-5 text-left hover:-translate-y-1 hover:border-electric/50 hover:shadow-[0_20px_50px_-20px_rgba(10,132,255,0.35)]"
           >
             <div className="flex items-center gap-4">
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-electric to-electric-deep text-white group-hover:rotate-6 transition-transform">
-                <Mail className="h-6 w-6" />
+              <div className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-electric to-electric-deep text-white group-hover:rotate-6 transition-transform duration-300 shadow-[0_8px_20px_-6px_rgba(10,132,255,0.5)]">
+                <Mail className="h-5 w-5" />
               </div>
-              <div>
-                <div className="text-xs uppercase tracking-widest text-white/50">Email</div>
-                <div className="text-base font-semibold text-white break-all">dantaniaman506@gmail.com</div>
+              <div className="min-w-0">
+                <div className="text-[10px] uppercase tracking-widest text-white/40">Email</div>
+                <div className="text-sm font-semibold text-white truncate">dantaniaman506@gmail.com</div>
               </div>
+              <ArrowRight className="h-4 w-4 text-white/20 ml-auto flex-shrink-0 transition-all group-hover:text-electric-glow group-hover:translate-x-1" />
             </div>
           </TapCard>
-        </div>
-        <div className="mt-10">
-          <GlowButton href={WHATSAPP} className="!px-10 !py-5 !text-base">
-            <MessageCircle className="h-5 w-5" /> Message Me on WhatsApp
-          </GlowButton>
         </div>
       </div>
     </section>
