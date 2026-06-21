@@ -16,6 +16,7 @@ import {
   Shield,
   Zap,
 } from "lucide-react";
+import amanPortrait from "@/assets/aman-portrait.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
