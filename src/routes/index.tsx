@@ -360,6 +360,131 @@ function Hero() {
   );
 }
 
+function About() {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <section id="about" className="relative py-28">
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(10,132,255,0.12), transparent 70%)",
+        }}
+      />
+      <div ref={ref} className="reveal mx-auto max-w-6xl px-6 grid gap-12 lg:grid-cols-2 lg:items-center">
+        {/* Portrait */}
+        <div className="relative mx-auto w-full max-w-md">
+          {/* Animated glow ring */}
+          <div
+            aria-hidden
+            className="absolute -inset-6 rounded-[2.5rem] opacity-70 blur-3xl"
+            style={{
+              background:
+                "conic-gradient(from 0deg, #0a84ff, #3da9ff, #1e40af, #0a84ff)",
+              animation: "border-spin 12s linear infinite",
+            }}
+          />
+          <div
+            className="relative rounded-[2rem] p-[2px]"
+            style={{
+              background:
+                "conic-gradient(from 0deg, #0a84ff, #3da9ff, #1e40af, #0a84ff)",
+            }}
+          >
+            <div className="relative overflow-hidden rounded-[1.9rem] bg-black">
+              <img
+                src={amanPortrait.url}
+                alt="Aman Dantani — Website Developer"
+                loading="lazy"
+                className="block w-full h-auto object-cover aspect-[3/4] transition-transform duration-700 hover:scale-105"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.85) 100%)",
+                }}
+              />
+              {/* Floating badge */}
+              <div className="absolute left-4 bottom-4 right-4 flex items-center justify-between">
+                <div className="glass rounded-full px-4 py-2 text-xs font-semibold text-white flex items-center gap-2">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                  </span>
+                  Available
+                </div>
+                <div className="glass rounded-full px-4 py-2 text-xs font-semibold text-electric-glow">
+                  50+ Projects
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Floating chips */}
+          <div
+            className="absolute -left-4 top-10 glass rounded-2xl px-4 py-3 hidden sm:block"
+            style={{ animation: "float-orb 6s ease-in-out infinite" }}
+          >
+            <div className="text-[10px] uppercase tracking-widest text-white/50">Stack</div>
+            <div className="text-sm font-semibold text-white">React · TS · Tailwind</div>
+          </div>
+          <div
+            className="absolute -right-4 bottom-16 glass rounded-2xl px-4 py-3 hidden sm:block"
+            style={{ animation: "float-orb 8s ease-in-out infinite reverse" }}
+          >
+            <div className="text-[10px] uppercase tracking-widest text-white/50">Based in</div>
+            <div className="text-sm font-semibold text-white">India · Remote</div>
+          </div>
+        </div>
+
+        {/* Text */}
+        <div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-medium tracking-widest text-electric-glow uppercase">
+            <Sparkles className="h-3 w-3" /> About Me
+          </div>
+          <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+            Hi, I'm <span className="text-gradient">Aman Dantani</span> — a website developer obsessed with details.
+          </h2>
+          <p className="mt-5 text-base text-white/70 leading-relaxed">
+            For the last 3+ years I've helped doctors, founders and small businesses look premium
+            online. I write clean code, design with intent, and ship fast — so your website not
+            only looks aesthetic, but actually brings in customers.
+          </p>
+          <p className="mt-3 text-base text-white/60 leading-relaxed">
+            From pixel-perfect landing pages to full multi-page business sites with SEO and
+            ongoing maintenance — I handle it end-to-end so you can focus on your business.
+          </p>
+
+          <div className="mt-7 grid grid-cols-2 gap-3 max-w-md">
+            {[
+              ["Pixel-perfect", "Design"],
+              ["Lightning", "Fast"],
+              ["Mobile-first", "Always"],
+              ["Honest", "Pricing"],
+            ].map(([a, b]) => (
+              <div key={a} className="glass rounded-xl px-4 py-3">
+                <div className="text-sm font-semibold text-white">{a}</div>
+                <div className="text-xs text-electric-glow">{b}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            <GlowButton href={WHATSAPP}>
+              <MessageCircle className="h-4 w-4" /> Let's Work Together
+            </GlowButton>
+            <GlowButton href="#projects" variant="ghost">
+              See My Work <ArrowRight className="h-4 w-4" />
+            </GlowButton>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Services() {
   const ref = useReveal<HTMLDivElement>();
   const items = [
