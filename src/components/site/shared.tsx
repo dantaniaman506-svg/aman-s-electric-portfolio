@@ -306,11 +306,49 @@ export function PageBackground() {
   );
 }
 
+/* ============ Global Touch Ripple Effect ============ */
+export function GlobalTouchEffect() {
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+
+  useEffect(() => {
+    const handler = (e: PointerEvent) => {
+      if (e.pointerType === "mouse" && e.pressure === 0) return;
+      const id = performance.now() + Math.random();
+      setRipples((r) => [...r, { id, x: e.clientX, y: e.clientY }]);
+      setTimeout(() => setRipples((r) => r.filter((p) => p.id !== id)), 900);
+    };
+    window.addEventListener("pointerdown", handler, { passive: true });
+    return () => window.removeEventListener("pointerdown", handler);
+  }, []);
+
+  return (
+    <div className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden" aria-hidden>
+      {ripples.map((r) => (
+        <span
+          key={r.id}
+          className="absolute rounded-full"
+          style={{
+            left: r.x,
+            top: r.y,
+            width: 10,
+            height: 10,
+            marginLeft: -5,
+            marginTop: -5,
+            background: "radial-gradient(circle, rgba(61,169,255,0.95) 0%, rgba(10,132,255,0.6) 40%, transparent 70%)",
+            animation: "touch-burst 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /* ============ Navbar ============ */
 const NAV_LINKS = [
   { label: "Home", id: "home" },
   { label: "About", id: "about" },
   { label: "Services", id: "services" },
+  { label: "Process", id: "process" },
   { label: "Projects", id: "projects" },
   { label: "Pricing", id: "pricing" },
   { label: "Reviews", id: "reviews" },
@@ -1174,6 +1212,169 @@ export function ReviewsSection() {
       <div className="mt-16 space-y-6">
         <Marquee items={REVIEWS} direction="left" />
         <Marquee items={[...REVIEWS].reverse()} direction="right" />
+      </div>
+    </section>
+  );
+}
+
+/* ============ Process ============ */
+const PROCESS_STEPS = [
+  {
+    num: "01",
+    icon: "💬",
+    title: "Share Your Business Info",
+    desc: "WhatsApp pe apne business ke baare mein bata do — kya karte ho, kaise website chahiye, aur koi reference ho toh woh bhi bhejo. Bas itna kaafi hai shuru karne ke liye.",
+    tag: "WhatsApp Message",
+    accent: "#0a84ff",
+  },
+  {
+    num: "02",
+    icon: "🎨",
+    title: "Free Demo Website",
+    desc: "Main tumhare liye ek bilkul free demo website banata hoon — taaki tum actually dekh sako ki website kaisi lagegi. Koi charge nahi, koi commitment nahi.",
+    tag: "Zero Cost",
+    accent: "#3da9ff",
+  },
+  {
+    num: "03",
+    icon: "✅",
+    title: "Review the Demo",
+    desc: "Demo dekho, apne clients/family ko dikhao. Pasand aaye toh aage badhte hain, nahi aaye toh bilkul koi pressure nahi. Aur agar kuch alag chahiye toh woh bhi bata do.",
+    tag: "No Pressure",
+    accent: "#0a84ff",
+  },
+  {
+    num: "04",
+    icon: "💰",
+    title: "Price Discussion",
+    desc: "Ek baar demo approve ho jaye, hum budget aur features pe openly baat karte hain. Koi hidden charges nahi — sab kuch transparent aur seedha.",
+    tag: "Transparent Pricing",
+    accent: "#3da9ff",
+  },
+  {
+    num: "05",
+    icon: "🔧",
+    title: "Final Changes + Domain",
+    desc: "Jo bhi last changes chahiye woh kar deta hoon. Saath mein domain decide karte hain — tumhara business naam website ka address ban jata hai.",
+    tag: "Your Domain",
+    accent: "#0a84ff",
+  },
+  {
+    num: "06",
+    icon: "🤝",
+    title: "50% Advance",
+    desc: "Final website banane se pehle sirf 50% advance hota hai. Baaki 50% tab jab website tum dekh lo aur completely happy ho.",
+    tag: "Secure Payment",
+    accent: "#3da9ff",
+  },
+  {
+    num: "07",
+    icon: "🚀",
+    title: "Delivery + Balance",
+    desc: "Final website WhatsApp pe deliver karta hoon — live, fast aur mobile-ready. Tum khush ho jao, baaki 50% payment ho jaati hai. Done!",
+    tag: "Live & Ready",
+    accent: "#0a84ff",
+  },
+];
+
+export function ProcessSection() {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <section id="process" className="relative py-20 sm:py-28">
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 70% 60% at 50% 40%, rgba(10,132,255,0.09), transparent 70%)" }}
+      />
+      <div className="mx-auto max-w-6xl px-6">
+        <SectionTitle
+          kicker="How It Works"
+          title={<>From idea to <span className="text-gradient">live website</span></>}
+          subtitle="7 simple steps — transparent, pressure-free, and done entirely on WhatsApp."
+        />
+
+        {/* Desktop: 2-column staggered timeline */}
+        <div ref={ref} className="reveal mt-16 relative">
+          {/* Center line (desktop only) */}
+          <div
+            aria-hidden
+            className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-px"
+            style={{ background: "linear-gradient(to bottom, transparent 0%, rgba(10,132,255,0.4) 8%, rgba(10,132,255,0.4) 92%, transparent 100%)" }}
+          />
+
+          <div className="space-y-6 lg:space-y-0">
+            {PROCESS_STEPS.map((step, i) => {
+              const isRight = i % 2 === 1;
+              return (
+                <div
+                  key={step.num}
+                  className={`relative lg:flex lg:items-center lg:gap-0 ${isRight ? "lg:flex-row-reverse" : ""}`}
+                  style={{ marginBottom: i < PROCESS_STEPS.length - 1 ? undefined : 0 }}
+                >
+                  {/* Card side */}
+                  <div className={`lg:w-[calc(50%-2rem)] ${isRight ? "lg:pl-8" : "lg:pr-8"} mb-4 lg:mb-0`}>
+                    <div
+                      className="group relative glass rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-electric/40 hover:shadow-[0_20px_50px_-20px_rgba(10,132,255,0.35)] active:scale-[0.99] cursor-default"
+                    >
+                      {/* Step number watermark */}
+                      <div
+                        aria-hidden
+                        className="absolute top-4 right-5 text-5xl font-black leading-none select-none pointer-events-none"
+                        style={{ color: `${step.accent}12` }}
+                      >
+                        {step.num}
+                      </div>
+
+                      <div className="flex items-start gap-4 relative">
+                        {/* Icon */}
+                        <div
+                          className="flex-shrink-0 h-12 w-12 rounded-xl flex items-center justify-center text-2xl shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
+                          style={{ background: `linear-gradient(135deg, ${step.accent}30, ${step.accent}10)`, border: `1px solid ${step.accent}30` }}
+                        >
+                          {step.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-2 flex-wrap">
+                            <span className="text-[10px] font-bold tracking-widest text-white/30">STEP {step.num}</span>
+                            <span
+                              className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide"
+                              style={{ background: `${step.accent}20`, color: step.accent, border: `1px solid ${step.accent}30` }}
+                            >
+                              {step.tag}
+                            </span>
+                          </div>
+                          <h3 className="text-base sm:text-lg font-bold text-white leading-snug mb-2">{step.title}</h3>
+                          <p className="text-sm text-white/60 leading-relaxed">{step.desc}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Center dot (desktop only) */}
+                  <div className="hidden lg:flex lg:w-16 lg:flex-shrink-0 items-center justify-center z-10">
+                    <div
+                      className="h-10 w-10 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-[0_0_20px_rgba(10,132,255,0.5)]"
+                      style={{ background: `linear-gradient(135deg, ${step.accent}, #1e40af)` }}
+                    >
+                      {step.num}
+                    </div>
+                  </div>
+
+                  {/* Empty spacer for alternating layout */}
+                  <div className="hidden lg:block lg:w-[calc(50%-2rem)]" />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="mt-14 text-center">
+          <p className="text-sm text-white/50 mb-5">Shuru karna hai? WhatsApp pe ek message karo — baaki sab mai handle karta hoon 👇</p>
+          <GlowButton href={WHATSAPP} className="!px-10 !py-4 !text-base">
+            <MessageCircle className="h-5 w-5" /> Start with a Free Demo
+          </GlowButton>
+        </div>
       </div>
     </section>
   );
