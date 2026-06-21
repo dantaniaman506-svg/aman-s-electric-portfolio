@@ -195,6 +195,7 @@ function Navbar() {
   }, []);
   const links = [
     ["Home", "#home"],
+    ["About", "#about"],
     ["Services", "#services"],
     ["Projects", "#projects"],
     ["Pricing", "#pricing"],
