@@ -5,11 +5,11 @@ import {
   Footer,
   Hero,
   AboutSection,
+  ReviewsSection,
   ServicesSection,
   ProcessSection,
   ProjectsSection,
   PricingSection,
-  ReviewsSection,
   FAQSection,
   ContactSection,
 } from "./components/site/shared";
@@ -23,11 +23,11 @@ export default function App() {
       <main className="relative min-h-screen text-white overflow-x-hidden">
         <Hero />
         <AboutSection />
+        <ReviewsSection />
         <ServicesSection />
         <ProcessSection />
         <ProjectsSection />
         <PricingSection />
-        <ReviewsSection />
         <FAQSection />
         <ContactSection />
       </main>

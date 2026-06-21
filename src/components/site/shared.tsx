@@ -308,36 +308,61 @@ export function PageBackground() {
 
 /* ============ Global Touch Ripple Effect ============ */
 export function GlobalTouchEffect() {
-  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+  const [taps, setTaps] = useState<{ id: number; x: number; y: number }[]>([]);
 
   useEffect(() => {
     const handler = (e: PointerEvent) => {
-      if (e.pointerType === "mouse" && e.pressure === 0) return;
       const id = performance.now() + Math.random();
-      setRipples((r) => [...r, { id, x: e.clientX, y: e.clientY }]);
-      setTimeout(() => setRipples((r) => r.filter((p) => p.id !== id)), 900);
+      setTaps((t) => [...t, { id, x: e.clientX, y: e.clientY }]);
+      setTimeout(() => setTaps((t) => t.filter((p) => p.id !== id)), 1100);
     };
     window.addEventListener("pointerdown", handler, { passive: true });
     return () => window.removeEventListener("pointerdown", handler);
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden" aria-hidden>
-      {ripples.map((r) => (
-        <span
-          key={r.id}
-          className="absolute rounded-full"
-          style={{
-            left: r.x,
-            top: r.y,
-            width: 10,
-            height: 10,
-            marginLeft: -5,
-            marginTop: -5,
-            background: "radial-gradient(circle, rgba(61,169,255,0.95) 0%, rgba(10,132,255,0.6) 40%, transparent 70%)",
-            animation: "touch-burst 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards",
-          }}
-        />
+    <div className="pointer-events-none fixed inset-0 z-[9999]" aria-hidden>
+      {taps.map((t) => (
+        <div key={t.id} style={{ position: "absolute", left: t.x, top: t.y }}>
+          {/* Center dot flash */}
+          <span
+            className="absolute rounded-full"
+            style={{
+              width: 10, height: 10,
+              background: "radial-gradient(circle, #fff 0%, #3da9ff 50%, transparent 80%)",
+              boxShadow: "0 0 12px 4px rgba(61,169,255,0.7)",
+              animation: "touch-dot 0.45s ease-out forwards",
+            }}
+          />
+          {/* Ring 1 — fast inner */}
+          <span
+            className="absolute rounded-full"
+            style={{
+              width: 56, height: 56,
+              border: "1.5px solid rgba(61,169,255,0.9)",
+              boxShadow: "0 0 8px rgba(10,132,255,0.4)",
+              animation: "touch-ring-1 0.55s cubic-bezier(0.2,1,0.4,1) forwards",
+            }}
+          />
+          {/* Ring 2 — medium */}
+          <span
+            className="absolute rounded-full"
+            style={{
+              width: 90, height: 90,
+              border: "1px solid rgba(10,132,255,0.6)",
+              animation: "touch-ring-2 0.75s 0.05s cubic-bezier(0.2,1,0.4,1) forwards",
+            }}
+          />
+          {/* Ring 3 — slow outer */}
+          <span
+            className="absolute rounded-full"
+            style={{
+              width: 130, height: 130,
+              border: "0.5px solid rgba(10,132,255,0.3)",
+              animation: "touch-ring-3 1s 0.1s cubic-bezier(0.2,1,0.4,1) forwards",
+            }}
+          />
+        </div>
       ))}
     </div>
   );
