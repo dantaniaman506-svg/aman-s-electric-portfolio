@@ -59,6 +59,31 @@ export function useReveal<T extends HTMLElement>(delay = 0) {
   return ref;
 }
 
+export function useStaggerReveal<T extends HTMLElement>(delayStep = 100) {
+  const ref = useRef<T | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const items = el.querySelectorAll(".rc");
+          items.forEach((item, i) => {
+            setTimeout(() => {
+              item.classList.add("reveal-child-in");
+            }, i * delayStep);
+          });
+          io.unobserve(el);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [delayStep]);
+  return ref;
+}
+
 /* ============ Tap / ripple effect ============ */
 function useTap() {
   const [bursts, setBursts] = useState<{ x: number; y: number; id: number }[]>([]);
@@ -812,7 +837,7 @@ const SERVICES = [
 ];
 
 export function ServicesSection() {
-  const ref = useReveal<HTMLDivElement>();
+  const ref = useStaggerReveal<HTMLDivElement>(90);
   return (
     <section id="services" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-6">
@@ -821,11 +846,11 @@ export function ServicesSection() {
           title={<>What I <span className="text-gradient">Build</span></>}
           subtitle="Everything you need to launch a serious online presence."
         />
-        <div ref={ref} className="reveal mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {SERVICES.map(({ icon: Icon, title, desc, color }, i) => (
+        <div ref={ref} className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {SERVICES.map(({ icon: Icon, title, desc, color }) => (
             <TapCard
               key={title}
-              className="rounded-2xl glass p-6 hover:-translate-y-2 hover:border-electric/50 hover:shadow-[0_20px_60px_-20px_rgba(10,132,255,0.4)]"
+              className="rc reveal-child rounded-2xl glass p-6 hover:-translate-y-2 hover:border-electric/50 hover:shadow-[0_20px_60px_-20px_rgba(10,132,255,0.4)]"
             >
               <div className="relative">
                 <div
@@ -834,7 +859,7 @@ export function ServicesSection() {
                 >
                   <Icon className="h-6 w-6" />
                 </div>
-                <h3 className="mt-5 text-lg font-semibold text-white">{title}</h3>
+                <h3 className="font-display mt-5 text-lg font-semibold text-white">{title}</h3>
                 <p className="mt-2 text-sm text-white/60 leading-relaxed">{desc}</p>
                 <div className="mt-4 h-px bg-gradient-to-r from-electric/30 to-transparent" />
                 <div className="mt-3 text-xs text-electric-glow flex items-center gap-1 group-hover:gap-2 transition-all">
@@ -858,6 +883,7 @@ export const PROJECTS = [
     desc: "Premium dental studio website with treatment menu, gallery and conversion-focused booking flow.",
     accent: "#0a84ff",
     num: "01",
+    localImg: "/pristine-preview.jpg",
   },
   {
     name: "Artful Smiles",
@@ -866,6 +892,7 @@ export const PROJECTS = [
     desc: "Elegant dental clinic website with appointment booking, services showcase and patient-friendly UX.",
     accent: "#3da9ff",
     num: "02",
+    localImg: null as string | null,
   },
   {
     name: "Gentle Smiles Dental",
@@ -874,6 +901,7 @@ export const PROJECTS = [
     desc: "Modern dental practice site hosted on edge — lightning fast, calming UI, clear calls to action.",
     accent: "#1e40af",
     num: "03",
+    localImg: null as string | null,
   },
   {
     name: "Pixel Perfect Pages",
@@ -882,18 +910,19 @@ export const PROJECTS = [
     desc: "Pixel-perfect agency landing page with rich animations, sticky nav and crisp typography.",
     accent: "#2563eb",
     num: "04",
+    localImg: null as string | null,
   },
 ];
 
 function ProjectCard({ p, featured = false }: { p: typeof PROJECTS[0]; featured?: boolean }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
-  const thumbUrl = `https://image.thum.io/get/width/1200/crop/675/noanimate/${p.url}`;
+  const imgSrc = p.localImg ?? `https://image.thum.io/get/width/1200/crop/675/noanimate/${p.url}`;
 
   return (
     <TapCard
       href={p.url}
-      className={`block glass overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_-30px_rgba(10,132,255,0.5)] hover:border-electric/50 ${featured ? "rounded-3xl" : "rounded-2xl"}`}
+      className={`rc reveal-child block glass overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_-30px_rgba(10,132,255,0.5)] hover:border-electric/50 ${featured ? "rounded-3xl" : "rounded-2xl"}`}
     >
       {/* Screenshot preview */}
       <div
@@ -909,20 +938,21 @@ function ProjectCard({ p, featured = false }: { p: typeof PROJECTS[0]; featured?
           }}
         />
 
-        {/* Real screenshot via thum.io */}
+        {/* Screenshot — local image or thum.io */}
         {!imgError && (
           <img
-            src={thumbUrl}
+            src={imgSrc}
             alt={`${p.name} screenshot`}
             loading="lazy"
             onLoad={() => setImgLoaded(true)}
             onError={() => setImgError(true)}
+            style={{ filter: p.localImg ? "none" : "brightness(0.65) saturate(1.1)" }}
             className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 ${imgLoaded ? "opacity-100 scale-100" : "opacity-0 scale-[1.03]"}`}
           />
         )}
 
-        {/* Dark overlay — heavier at bottom for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+        {/* Strong dark overlay — works for both light & dark site screenshots */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/65 to-black/25" />
 
         {/* Top browser bar */}
         <div
@@ -985,7 +1015,7 @@ function ProjectCard({ p, featured = false }: { p: typeof PROJECTS[0]; featured?
 }
 
 export function ProjectsSection() {
-  const ref = useReveal<HTMLDivElement>();
+  const ref = useStaggerReveal<HTMLDivElement>(120);
   const [featured, ...rest] = PROJECTS;
 
   return (
@@ -1002,7 +1032,7 @@ export function ProjectsSection() {
           subtitle="Real client websites — built, live, and converting. Click any card to visit live."
         />
 
-        <div ref={ref} className="reveal mt-14 space-y-5">
+        <div ref={ref} className="mt-14 space-y-5">
           {/* Featured — full width */}
           <ProjectCard p={featured} featured />
 
@@ -1436,7 +1466,7 @@ const PROCESS_STEPS: { num: string; icon: LucideIcon; title: string; desc: strin
 ];
 
 export function ProcessSection() {
-  const ref = useReveal<HTMLDivElement>();
+  const ref = useStaggerReveal<HTMLDivElement>(80);
   return (
     <section id="process" className="relative py-20 sm:py-28">
       <div
@@ -1451,7 +1481,7 @@ export function ProcessSection() {
           subtitle="7 simple steps — transparent, pressure-free, done entirely on WhatsApp."
         />
 
-        <div ref={ref} className="reveal mt-14 relative">
+        <div ref={ref} className="mt-14 relative">
           {/* Vertical timeline line */}
           <div
             aria-hidden
@@ -1464,7 +1494,7 @@ export function ProcessSection() {
               const Icon = step.icon;
               const isLast = i === PROCESS_STEPS.length - 1;
               return (
-                <div key={step.num} className="relative flex items-start gap-5 sm:gap-6">
+                <div key={step.num} className="rc reveal-child relative flex items-start gap-5 sm:gap-6">
                   {/* Step circle on timeline */}
                   <div className="relative z-10 flex-shrink-0 mt-5">
                     <div
