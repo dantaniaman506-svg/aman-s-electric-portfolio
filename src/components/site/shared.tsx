@@ -228,7 +228,7 @@ export function TapCard({
       style={{ background: "radial-gradient(600px circle at center, rgba(10,132,255,0.18), transparent 60%)" }}
     />
   );
-  const cls = `group relative overflow-hidden transition-all duration-300 active:scale-[0.985] touch-manipulation cursor-pointer ${className}`;
+  const cls = `group relative overflow-hidden transition-all duration-300 active:scale-[0.985] touch-manipulation cursor-pointer will-change-transform ${className}`;
 
   if (href) {
     return (
@@ -254,6 +254,88 @@ export function TapCard({
       {children}
       {flashLayer}
       {layer}
+    </div>
+  );
+}
+
+/* ============ CursorGlow ============ */
+export function CursorGlow() {
+  const [pos, setPos] = useState({ x: -400, y: -400 });
+  const raf = useRef<number>(0);
+
+  useEffect(() => {
+    const move = (e: MouseEvent) => {
+      cancelAnimationFrame(raf.current);
+      raf.current = requestAnimationFrame(() => setPos({ x: e.clientX, y: e.clientY }));
+    };
+    window.addEventListener("mousemove", move, { passive: true });
+    return () => { window.removeEventListener("mousemove", move); cancelAnimationFrame(raf.current); };
+  }, []);
+
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none fixed z-[9997] hidden md:block"
+      style={{
+        top: 0,
+        left: 0,
+        width: 500,
+        height: 500,
+        transform: `translate(${pos.x - 250}px, ${pos.y - 250}px)`,
+        background: "radial-gradient(circle, rgba(10,132,255,0.055) 0%, transparent 65%)",
+        transition: "transform 0.12s cubic-bezier(0.22, 1, 0.36, 1)",
+        willChange: "transform",
+      }}
+    />
+  );
+}
+
+/* ============ StatCard (animated counter) ============ */
+function StatCard({ val, label, delay = 0 }: { val: string; label: string; delay?: number }) {
+  const match = val.match(/^(\d+)(.*)$/);
+  const num = match ? parseInt(match[1]) : null;
+  const suffix = match ? match[2] : "";
+  const canCount = num !== null && !val.includes("/");
+
+  const [count, setCount] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setVisible(true); io.unobserve(el); }
+    }, { threshold: 0.4 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!visible || !canCount || num === null) return;
+    const start = performance.now();
+    const dur = 1600 + delay;
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setCount(Math.floor(eased * num));
+      if (t < 1) requestAnimationFrame(tick);
+      else setCount(num);
+    };
+    const tid = setTimeout(() => requestAnimationFrame(tick), delay);
+    return () => clearTimeout(tid);
+  }, [visible, canCount, num, delay]);
+
+  return (
+    <div
+      ref={ref}
+      className="glass rounded-2xl p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_-8px_rgba(10,132,255,0.4)] active:scale-95 will-change-transform"
+      style={{ animation: visible ? `count-up 0.6s ${delay * 0.5}ms cubic-bezier(0.22,1,0.36,1) both` : "none" }}
+    >
+      <div className="text-2xl sm:text-3xl font-bold text-gradient font-display">
+        {canCount ? `${count}${suffix}` : val}
+      </div>
+      <div className="mt-1 text-xs text-white/60">{label}</div>
     </div>
   );
 }
@@ -640,24 +722,14 @@ export function Hero() {
         </div>
 
         {/* Stats */}
-        <div
-          className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto"
-          style={{ animation: "fade-up 0.7s 0.5s ease both" }}
-        >
+        <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
           {[
-            ["50+", "Websites Built"],
-            ["3+", "Years Experience"],
-            ["100%", "Client Focus"],
-            ["24/7", "Support"],
-          ].map(([k, v], i) => (
-            <div
-              key={v}
-              className="glass rounded-2xl p-4 transition-all hover:-translate-y-1 active:scale-95"
-              style={{ animationDelay: `${0.1 * i}s` }}
-            >
-              <div className="text-2xl sm:text-3xl font-bold text-gradient">{k}</div>
-              <div className="mt-1 text-xs text-white/60">{v}</div>
-            </div>
+            { val: "50+", label: "Websites Built",    delay: 0   },
+            { val: "3+",  label: "Years Experience",  delay: 120 },
+            { val: "100%",label: "Client Focus",      delay: 240 },
+            { val: "24/7",label: "Support",           delay: 360 },
+          ].map(({ val, label, delay }) => (
+            <StatCard key={label} val={val} label={label} delay={delay} />
           ))}
         </div>
 

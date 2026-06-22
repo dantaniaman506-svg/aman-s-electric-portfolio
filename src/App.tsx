@@ -1,6 +1,7 @@
 import {
   PageBackground,
   GlobalTouchEffect,
+  CursorGlow,
   Navbar,
   Footer,
   Hero,
@@ -17,6 +18,7 @@ import {
 export default function App() {
   return (
     <div className="dark">
+      <CursorGlow />
       <PageBackground />
       <GlobalTouchEffect />
       <Navbar />
