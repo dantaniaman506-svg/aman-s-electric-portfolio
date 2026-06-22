@@ -17,6 +17,12 @@ import {
   X,
   ChevronDown,
   Globe,
+  Monitor,
+  Eye,
+  Banknote,
+  Flame,
+  Clock,
+  type LucideIcon,
 } from "lucide-react";
 
 export const WHATSAPP =
@@ -239,7 +245,7 @@ export function SectionTitle({ kicker, title, subtitle }: {
       <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs font-medium tracking-widest text-electric-glow uppercase">
         <Sparkles className="h-3 w-3" /> {kicker}
       </div>
-      <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+      <h2 className="font-display mt-5 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
         {title}
       </h2>
       {subtitle && <p className="mt-4 text-base text-white/60">{subtitle}</p>}
@@ -569,7 +575,7 @@ export function Hero() {
         </div>
 
         <h1
-          className="mt-6 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95]"
+          className="font-display mt-6 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95]"
           style={{ animation: "fade-up 0.7s 0.1s ease both" }}
         >
           <span className="block text-white">Aman Dantani</span>
@@ -1021,40 +1027,79 @@ export function ProjectsSection() {
   );
 }
 
+/* ============ Countdown hook ============ */
+function useCountdown(hours = 24) {
+  const endRef = useRef(Date.now() + hours * 3_600_000);
+  const [rem, setRem] = useState(hours * 3_600_000);
+  useEffect(() => {
+    const id = setInterval(() => setRem(Math.max(0, endRef.current - Date.now())), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const h = Math.floor(rem / 3_600_000).toString().padStart(2, "0");
+  const m = Math.floor((rem % 3_600_000) / 60_000).toString().padStart(2, "0");
+  const s = Math.floor((rem % 60_000) / 1_000).toString().padStart(2, "0");
+  return { h, m, s };
+}
+
+function TimeBox({ val, label }: { val: string; label: string }) {
+  return (
+    <div className="flex flex-col items-center">
+      <div
+        className="min-w-[52px] sm:min-w-[60px] rounded-xl px-3 py-2 text-center text-2xl sm:text-3xl font-bold text-white tabular-nums font-display"
+        style={{
+          background: "linear-gradient(135deg, rgba(10,132,255,0.25), rgba(30,58,138,0.3))",
+          border: "1px solid rgba(10,132,255,0.35)",
+          boxShadow: "0 0 20px rgba(10,132,255,0.15)",
+        }}
+      >
+        {val}
+      </div>
+      <span className="mt-1 text-[9px] uppercase tracking-widest text-white/40">{label}</span>
+    </div>
+  );
+}
+
 /* ============ Pricing ============ */
 export function PricingSection() {
   const ref = useReveal<HTMLDivElement>();
+  const { h, m, s } = useCountdown(24);
+
   const plans = [
     {
       kicker: "Flexible Plan",
-      title: "One-Time + Monthly",
+      title: "Monthly Maintenance",
+      originalPrice: "₹750",
       price: "₹300",
       cycle: "/month",
-      equivalent: null as string | null,
+      originalDev: "₹10,000 – ₹15,000",
       dev: "₹4,000 – ₹6,000",
+      saving: "60% OFF",
       features: [
-        "Website Development (one-time)",
-        "Monthly Maintenance ₹300/mo",
-        "Domain Maintenance included",
-        "Bug fixes & small updates",
-        "Email support",
+        "Full website development (one-time)",
+        "Monthly maintenance at ₹300/mo",
+        "Domain & hosting included",
+        "Bug fixes & content updates",
+        "WhatsApp support",
       ],
-      cta: "Pay as you go",
+      cta: "Get Started",
       highlight: false,
     },
     {
       kicker: "Best Value",
-      title: "One-Time + Annual",
+      title: "Annual Maintenance",
+      originalPrice: "₹7,500",
       price: "₹3,000",
       cycle: "/year",
-      equivalent: "≈ ₹250/month",
+      originalDev: "₹10,000 – ₹15,000",
       dev: "₹4,000 – ₹6,000",
+      saving: "60% OFF",
+      equivalent: "≈ ₹250 / month",
       features: [
-        "Website Development (one-time)",
-        "Annual Maintenance ₹3,000/yr",
+        "Full website development (one-time)",
+        "Annual maintenance at ₹3,000/yr",
         "Equivalent to just ₹250/month",
-        "No monthly payments needed",
-        "Priority Support",
+        "No recurring monthly payments",
+        "Priority WhatsApp support",
         "Free minor design tweaks",
       ],
       cta: "Choose Annual — Save ₹600",
@@ -1067,7 +1112,7 @@ export function PricingSection() {
       <div
         aria-hidden
         className="absolute inset-0 -z-10"
-        style={{ background: "radial-gradient(ellipse 70% 50% at 50% 50%, rgba(10,132,255,0.1), transparent 60%)" }}
+        style={{ background: "radial-gradient(ellipse 70% 50% at 50% 50%, rgba(10,132,255,0.09), transparent 60%)" }}
       />
       <div className="mx-auto max-w-6xl px-6">
         <SectionTitle
@@ -1075,7 +1120,34 @@ export function PricingSection() {
           title={<>Transparent <span className="text-gradient">Pricing Plans</span></>}
           subtitle="Pick a plan. Get a beautiful website. Pay only for what you need."
         />
-        <div ref={ref} className="reveal mt-16 grid gap-8 lg:grid-cols-2 lg:items-stretch">
+
+        {/* Urgency banner with timer */}
+        <div
+          className="mt-10 mx-auto max-w-3xl rounded-2xl border border-electric/30 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-5"
+          style={{ background: "linear-gradient(135deg, rgba(10,132,255,0.1), rgba(30,58,138,0.15))", backdropFilter: "blur(12px)" }}
+        >
+          <div className="flex items-center gap-3 text-center sm:text-left">
+            <div
+              className="flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center"
+              style={{ background: "linear-gradient(135deg, #0a84ff, #1e3a8a)", boxShadow: "0 0 16px rgba(10,132,255,0.4)" }}
+            >
+              <Flame className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <div className="font-display text-base sm:text-lg font-bold text-white">Limited Time Offer — 60% Off</div>
+              <div className="text-xs text-white/55 mt-0.5">Prices go back to full rate when this session ends</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <TimeBox val={h} label="hrs" />
+            <span className="text-2xl font-bold text-electric-glow/60 pb-4">:</span>
+            <TimeBox val={m} label="min" />
+            <span className="text-2xl font-bold text-electric-glow/60 pb-4">:</span>
+            <TimeBox val={s} label="sec" />
+          </div>
+        </div>
+
+        <div ref={ref} className="reveal mt-8 grid gap-8 lg:grid-cols-2 lg:items-stretch">
           {plans.map((p) => (
             <div
               key={p.title}
@@ -1088,47 +1160,82 @@ export function PricingSection() {
               {p.highlight && (
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 rounded-3xl opacity-40 blur-2xl"
+                  className="pointer-events-none absolute inset-0 rounded-3xl opacity-35 blur-2xl"
                   style={{ background: "conic-gradient(from 0deg, #0a84ff, #3da9ff, #1e40af, #0a84ff)", animation: "border-spin 8s linear infinite" }}
                 />
               )}
-              <div className="relative rounded-3xl bg-[#04060d] p-8 sm:p-10 h-full flex flex-col">
+              <div className="relative rounded-3xl bg-[#04060d] p-7 sm:p-10 h-full flex flex-col">
                 {p.highlight && (
-                  <div className="absolute -top-3 right-6 rounded-full bg-gradient-to-r from-electric to-electric-glow px-4 py-1 text-[11px] font-bold tracking-widest text-white shadow-[0_10px_30px_-10px_rgba(10,132,255,0.8)]">
-                    ⭐ RECOMMENDED
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-electric to-electric-glow px-5 py-1.5 text-[11px] font-bold tracking-widest text-white shadow-[0_10px_30px_-10px_rgba(10,132,255,0.8)] whitespace-nowrap">
+                    RECOMMENDED
                   </div>
                 )}
-                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-electric-glow">
-                  {p.highlight ? <Star className="h-3.5 w-3.5" /> : <Zap className="h-3.5 w-3.5" />}
-                  {p.kicker}
+
+                {/* Plan header */}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-electric-glow">
+                    {p.highlight ? <Star className="h-3.5 w-3.5" /> : <Zap className="h-3.5 w-3.5" />}
+                    {p.kicker}
+                  </div>
+                  <span
+                    className="rounded-full px-3 py-1 text-[11px] font-bold tracking-wider text-white"
+                    style={{ background: "linear-gradient(135deg, #0a84ff, #1e3a8a)", boxShadow: "0 4px 14px rgba(10,132,255,0.4)" }}
+                  >
+                    {p.saving}
+                  </span>
                 </div>
-                <h3 className="mt-3 text-2xl font-bold text-white">{p.title}</h3>
-                <div className="mt-6 flex items-end gap-2">
-                  <span className="text-5xl sm:text-6xl font-bold text-white tracking-tight">{p.price}</span>
-                  <span className="pb-2 text-white/60">{p.cycle}</span>
+
+                <h3 className="font-display mt-3 text-xl sm:text-2xl font-bold text-white">{p.title}</h3>
+
+                {/* Maintenance price with crossed original */}
+                <div className="mt-6">
+                  <div className="text-[11px] uppercase tracking-widest text-white/40 mb-2">Maintenance</div>
+                  <div className="flex items-end gap-3">
+                    <div>
+                      <span className="text-sm text-white/35 line-through">{p.originalPrice}</span>
+                      <div className="flex items-end gap-1.5">
+                        <span className="font-display text-5xl sm:text-6xl font-bold text-white tracking-tight">{p.price}</span>
+                        <span className="pb-2 text-white/55 text-sm">{p.cycle}</span>
+                      </div>
+                    </div>
+                  </div>
+                  {p.equivalent && (
+                    <div className="mt-1 text-xs text-electric-glow">{p.equivalent}</div>
+                  )}
                 </div>
-                {p.equivalent && <div className="mt-1 text-xs text-electric-glow">{p.equivalent}</div>}
-                <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
-                  <div className="text-[11px] uppercase tracking-widest text-white/50">Website Development</div>
-                  <div className="mt-1 text-lg font-semibold text-white">
-                    {p.dev}{" "}
-                    <span className="text-xs font-normal text-white/50">(one-time)</span>
+
+                {/* Development cost with crossed original */}
+                <div className="mt-5 rounded-2xl border border-white/8 bg-white/[0.02] p-4">
+                  <div className="text-[11px] uppercase tracking-widest text-white/40 mb-1.5">Website Development — One-Time</div>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="text-sm text-white/35 line-through">{p.originalDev}</span>
+                    <span className="text-lg font-bold text-white">{p.dev}</span>
                   </div>
                 </div>
+
+                {/* Save highlight for annual */}
                 {p.highlight && (
-                  <div className="mt-4 flex items-center gap-3 rounded-2xl border border-electric/40 bg-electric/10 p-4">
-                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-electric to-electric-deep text-white text-lg">
-                      💰
+                  <div
+                    className="mt-4 flex items-center gap-3 rounded-xl border border-electric/30 p-4"
+                    style={{ background: "rgba(10,132,255,0.08)" }}
+                  >
+                    <div
+                      className="flex-shrink-0 h-9 w-9 rounded-full flex items-center justify-center"
+                      style={{ background: "linear-gradient(135deg, #0a84ff, #1e3a8a)" }}
+                    >
+                      <Zap className="h-4 w-4 text-white" />
                     </div>
                     <div>
-                      <div className="text-base font-bold text-white">Save ₹600</div>
-                      <div className="text-xs text-white/60">vs monthly plan (₹3,600 → ₹3,000)</div>
+                      <div className="text-sm font-bold text-white">Save ₹600 vs monthly</div>
+                      <div className="text-xs text-white/55">₹3,600/yr monthly → ₹3,000/yr annual</div>
                     </div>
                   </div>
                 )}
+
+                {/* Features */}
                 <ul className="mt-6 space-y-3 flex-1">
                   {p.features.map((f) => (
-                    <li key={f} className="flex items-start gap-3 text-sm text-white/80">
+                    <li key={f} className="flex items-start gap-3 text-sm text-white/75">
                       <span className="mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-electric/20 text-electric-glow">
                         <Check className="h-3 w-3" />
                       </span>
@@ -1136,6 +1243,7 @@ export function PricingSection() {
                     </li>
                   ))}
                 </ul>
+
                 <div className="mt-8">
                   <GlowButton href={WHATSAPP} variant={p.highlight ? "primary" : "ghost"} className="w-full">
                     <MessageCircle className="h-4 w-4" /> {p.cta}
@@ -1145,8 +1253,10 @@ export function PricingSection() {
             </div>
           ))}
         </div>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 rounded-2xl glass px-6 py-5 text-sm text-white/70">
-          <div className="flex items-center gap-2">
+
+        {/* Included in all plans */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 rounded-2xl glass px-6 py-5 text-sm text-white/65">
+          <div className="flex items-center gap-2 font-medium text-white/80">
             <Shield className="h-4 w-4 text-electric-glow" /> All plans include:
           </div>
           {["SSL Certificate", "Domain Setup", "Responsive Design", "Basic SEO"].map((x) => (
@@ -1266,60 +1376,60 @@ export function ReviewsSection() {
 }
 
 /* ============ Process ============ */
-const PROCESS_STEPS = [
+const PROCESS_STEPS: { num: string; icon: LucideIcon; title: string; desc: string; tag: string; accent: string }[] = [
   {
     num: "01",
-    icon: "💬",
-    title: "Share Your Business Info",
-    desc: "WhatsApp pe apne business ke baare mein bata do — kya karte ho, kaise website chahiye, aur koi reference ho toh woh bhi bhejo. Bas itna kaafi hai shuru karne ke liye.",
-    tag: "WhatsApp Message",
+    icon: MessageCircle,
+    title: "Share Your Business Details",
+    desc: "Send a WhatsApp message with your business info — what you do, the kind of website you need, and any references you like. That's all it takes to get started.",
+    tag: "Via WhatsApp",
     accent: "#0a84ff",
   },
   {
     num: "02",
-    icon: "🎨",
+    icon: Monitor,
     title: "Free Demo Website",
-    desc: "Main tumhare liye ek bilkul free demo website banata hoon — taaki tum actually dekh sako ki website kaisi lagegi. Koi charge nahi, koi commitment nahi.",
+    desc: "I build a fully working demo site at zero cost — so you can actually see what your website will look like before making any decision or commitment.",
     tag: "Zero Cost",
     accent: "#3da9ff",
   },
   {
     num: "03",
-    icon: "✅",
-    title: "Review the Demo",
-    desc: "Demo dekho, apne clients/family ko dikhao. Pasand aaye toh aage badhte hain, nahi aaye toh bilkul koi pressure nahi. Aur agar kuch alag chahiye toh woh bhi bata do.",
+    icon: Eye,
+    title: "Review & Give Feedback",
+    desc: "Browse the demo, show it to your team or family. Love it? We move forward. Want changes? No problem — no pressure, no deadline, no rush.",
     tag: "No Pressure",
     accent: "#0a84ff",
   },
   {
     num: "04",
-    icon: "💰",
-    title: "Price Discussion",
-    desc: "Ek baar demo approve ho jaye, hum budget aur features pe openly baat karte hain. Koi hidden charges nahi — sab kuch transparent aur seedha.",
-    tag: "Transparent Pricing",
+    icon: Banknote,
+    title: "Transparent Pricing Talk",
+    desc: "Once you approve the demo, we discuss budget and features openly. Every rupee is clear upfront — no hidden charges, no surprises of any kind.",
+    tag: "No Hidden Fees",
     accent: "#3da9ff",
   },
   {
     num: "05",
-    icon: "🔧",
-    title: "Final Changes + Domain",
-    desc: "Jo bhi last changes chahiye woh kar deta hoon. Saath mein domain decide karte hain — tumhara business naam website ka address ban jata hai.",
+    icon: Globe,
+    title: "Final Edits & Domain Setup",
+    desc: "Last refinements applied exactly as you want. We choose your domain name together — your business name becomes your permanent online address.",
     tag: "Your Domain",
     accent: "#0a84ff",
   },
   {
     num: "06",
-    icon: "🤝",
-    title: "50% Advance",
-    desc: "Final website banane se pehle sirf 50% advance hota hai. Baaki 50% tab jab website tum dekh lo aur completely happy ho.",
+    icon: Shield,
+    title: "50% Advance Payment",
+    desc: "Just 50% upfront to begin building the final version. The remaining 50% is paid only after you see the finished website and are fully satisfied.",
     tag: "Secure Payment",
     accent: "#3da9ff",
   },
   {
     num: "07",
-    icon: "🚀",
-    title: "Delivery + Balance",
-    desc: "Final website WhatsApp pe deliver karta hoon — live, fast aur mobile-ready. Tum khush ho jao, baaki 50% payment ho jaati hai. Done!",
+    icon: Rocket,
+    title: "Live Website Delivered",
+    desc: "Your website goes live and is shared with you on WhatsApp — fast, mobile-ready and beautiful. Pay the balance. You are officially online.",
     tag: "Live & Ready",
     accent: "#0a84ff",
   },
@@ -1332,84 +1442,83 @@ export function ProcessSection() {
       <div
         aria-hidden
         className="absolute inset-0 -z-10 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 70% 60% at 50% 40%, rgba(10,132,255,0.09), transparent 70%)" }}
+        style={{ background: "radial-gradient(ellipse 80% 60% at 50% 40%, rgba(10,132,255,0.07), transparent 70%)" }}
       />
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-5xl px-6">
         <SectionTitle
           kicker="How It Works"
           title={<>From idea to <span className="text-gradient">live website</span></>}
-          subtitle="7 simple steps — transparent, pressure-free, and done entirely on WhatsApp."
+          subtitle="7 simple steps — transparent, pressure-free, done entirely on WhatsApp."
         />
 
-        {/* Desktop: 2-column staggered timeline */}
-        <div ref={ref} className="reveal mt-16 relative">
-          {/* Center line (desktop only) */}
+        <div ref={ref} className="reveal mt-14 relative">
+          {/* Vertical timeline line */}
           <div
             aria-hidden
-            className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-px"
-            style={{ background: "linear-gradient(to bottom, transparent 0%, rgba(10,132,255,0.4) 8%, rgba(10,132,255,0.4) 92%, transparent 100%)" }}
+            className="absolute left-[22px] sm:left-[27px] top-4 bottom-4 w-px"
+            style={{ background: "linear-gradient(to bottom, rgba(10,132,255,0.5) 0%, rgba(10,132,255,0.15) 85%, transparent 100%)" }}
           />
 
-          <div className="space-y-6 lg:space-y-0">
+          <div className="space-y-4">
             {PROCESS_STEPS.map((step, i) => {
-              const isRight = i % 2 === 1;
+              const Icon = step.icon;
+              const isLast = i === PROCESS_STEPS.length - 1;
               return (
-                <div
-                  key={step.num}
-                  className={`relative lg:flex lg:items-center lg:gap-0 ${isRight ? "lg:flex-row-reverse" : ""}`}
-                  style={{ marginBottom: i < PROCESS_STEPS.length - 1 ? undefined : 0 }}
-                >
-                  {/* Card side */}
-                  <div className={`lg:w-[calc(50%-2rem)] ${isRight ? "lg:pl-8" : "lg:pr-8"} mb-4 lg:mb-0`}>
+                <div key={step.num} className="relative flex items-start gap-5 sm:gap-6">
+                  {/* Step circle on timeline */}
+                  <div className="relative z-10 flex-shrink-0 mt-5">
                     <div
-                      className="group relative glass rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-electric/40 hover:shadow-[0_20px_50px_-20px_rgba(10,132,255,0.35)] active:scale-[0.99] cursor-default"
-                    >
-                      {/* Step number watermark */}
-                      <div
-                        aria-hidden
-                        className="absolute top-4 right-5 text-5xl font-black leading-none select-none pointer-events-none"
-                        style={{ color: `${step.accent}12` }}
-                      >
-                        {step.num}
-                      </div>
-
-                      <div className="flex items-start gap-4 relative">
-                        {/* Icon */}
-                        <div
-                          className="flex-shrink-0 h-12 w-12 rounded-xl flex items-center justify-center text-2xl shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
-                          style={{ background: `linear-gradient(135deg, ${step.accent}30, ${step.accent}10)`, border: `1px solid ${step.accent}30` }}
-                        >
-                          {step.icon}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-2 flex-wrap">
-                            <span className="text-[10px] font-bold tracking-widest text-white/30">STEP {step.num}</span>
-                            <span
-                              className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wide"
-                              style={{ background: `${step.accent}20`, color: step.accent, border: `1px solid ${step.accent}30` }}
-                            >
-                              {step.tag}
-                            </span>
-                          </div>
-                          <h3 className="text-base sm:text-lg font-bold text-white leading-snug mb-2">{step.title}</h3>
-                          <p className="text-sm text-white/60 leading-relaxed">{step.desc}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Center dot (desktop only) */}
-                  <div className="hidden lg:flex lg:w-16 lg:flex-shrink-0 items-center justify-center z-10">
-                    <div
-                      className="h-10 w-10 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-[0_0_20px_rgba(10,132,255,0.5)]"
-                      style={{ background: `linear-gradient(135deg, ${step.accent}, #1e40af)` }}
+                      className="h-11 w-11 sm:h-[54px] sm:w-[54px] rounded-full flex items-center justify-center text-xs sm:text-sm font-bold text-white"
+                      style={{
+                        background: `linear-gradient(135deg, ${step.accent}, #1e3a8a)`,
+                        boxShadow: `0 0 0 3px rgba(10,132,255,0.12), 0 0 18px rgba(10,132,255,0.25)`,
+                      }}
                     >
                       {step.num}
                     </div>
+                    {!isLast && (
+                      <div
+                        aria-hidden
+                        className="absolute left-1/2 top-full -translate-x-1/2 w-px h-4"
+                        style={{ background: `${step.accent}30` }}
+                      />
+                    )}
                   </div>
 
-                  {/* Empty spacer for alternating layout */}
-                  <div className="hidden lg:block lg:w-[calc(50%-2rem)]" />
+                  {/* Card */}
+                  <div
+                    className="group flex-1 glass rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-electric/40 hover:shadow-[0_16px_48px_-16px_rgba(10,132,255,0.35)] cursor-default mb-1"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        {/* Icon box */}
+                        <div
+                          className="flex-shrink-0 h-9 w-9 sm:h-10 sm:w-10 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
+                          style={{ background: `${step.accent}18`, border: `1px solid ${step.accent}35` }}
+                        >
+                          <Icon className="h-4 w-4 sm:h-5 sm:w-5" style={{ color: step.accent }} />
+                        </div>
+                        <h3 className="font-display text-base sm:text-lg font-bold text-white leading-snug">{step.title}</h3>
+                      </div>
+                      {/* Tag */}
+                      <span
+                        className="hidden sm:inline-flex flex-shrink-0 items-center rounded-full px-3 py-1 text-[10px] font-semibold tracking-wider whitespace-nowrap"
+                        style={{ background: `${step.accent}15`, color: step.accent, border: `1px solid ${step.accent}30` }}
+                      >
+                        {step.tag}
+                      </span>
+                    </div>
+                    <p className="mt-3 text-sm text-white/60 leading-relaxed pl-[52px] sm:pl-[52px]">{step.desc}</p>
+                    {/* Mobile tag */}
+                    <div className="mt-3 pl-[52px] sm:hidden">
+                      <span
+                        className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold tracking-wider"
+                        style={{ background: `${step.accent}15`, color: step.accent, border: `1px solid ${step.accent}30` }}
+                      >
+                        {step.tag}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               );
             })}
@@ -1417,8 +1526,8 @@ export function ProcessSection() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-14 text-center">
-          <p className="text-sm text-white/50 mb-5">Shuru karna hai? WhatsApp pe ek message karo — baaki sab mai handle karta hoon 👇</p>
+        <div className="mt-12 text-center">
+          <p className="text-sm text-white/45 mb-5">Ready to get started? Drop a message — I handle everything from here.</p>
           <GlowButton href={WHATSAPP} className="!px-10 !py-4 !text-base">
             <MessageCircle className="h-5 w-5" /> Start with a Free Demo
           </GlowButton>

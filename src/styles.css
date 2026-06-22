@@ -6,6 +6,7 @@
 
 @theme {
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --color-electric: #0a84ff;
   --color-electric-glow: #3da9ff;
   --color-electric-deep: #1e3a8a;
