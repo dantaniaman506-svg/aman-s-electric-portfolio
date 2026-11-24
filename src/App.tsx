@@ -18,8 +18,8 @@ import {
 
 export default function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
-    const savedTheme = localStorage.getItem("portfolio-theme");
-    return savedTheme === "dark" ? "dark" : "light";
+    const savedTheme = localStorage.getItem("portfolio-theme-v2");
+    return savedTheme === "light" ? "light" : "dark";
   });
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function App() {
     root.dataset.theme = theme;
     root.classList.toggle("dark", theme === "dark");
     root.style.colorScheme = theme;
-    localStorage.setItem("portfolio-theme", theme);
+    localStorage.setItem("portfolio-theme-v2", theme);
   }, [theme]);
 
   return (

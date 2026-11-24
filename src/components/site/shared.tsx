@@ -1026,7 +1026,7 @@ export const PROJECTS = [
     desc: "A live digital studio website with a distinctive visual identity and a polished online experience.",
     accent: "#0a84ff",
     num: "01",
-    localImg: null as string | null,
+    localImg: "/project-previews/nexgen.webp",
   },
   {
     name: "Advance Speech & Hearing",
@@ -1035,7 +1035,7 @@ export const PROJECTS = [
     desc: "A welcoming online destination for speech and hearing care.",
     accent: "#3da9ff",
     num: "02",
-    localImg: null as string | null,
+    localImg: "/project-previews/advance-speech-hearing.webp",
   },
   {
     name: "Smile Architects Studio",
@@ -1044,7 +1044,7 @@ export const PROJECTS = [
     desc: "A modern dental studio website designed to make services easy to explore.",
     accent: "#f97380",
     num: "03",
-    localImg: null as string | null,
+    localImg: "/project-previews/smile-architects.webp",
   },
   {
     name: "Glam by Dia",
@@ -1053,16 +1053,16 @@ export const PROJECTS = [
     desc: "A stylish beauty brand website with an elegant, easy-to-browse presentation.",
     accent: "#d946a6",
     num: "04",
-    localImg: null as string | null,
+    localImg: "/project-previews/glam-by-dia.webp",
   },
   {
-    name: "Growth Catalyst",
-    tag: "Business",
+    name: "Adwebsolution",
+    tag: "Digital Growth",
     url: "https://growth-catalyst-site-one.vercel.app/",
-    desc: "A focused business website for presenting services and helping visitors take action.",
+    desc: "A digital marketing and growth agency website focused on turning online reach into leads.",
     accent: "#22c55e",
     num: "05",
-    localImg: null as string | null,
+    localImg: "/project-previews/growth-catalyst.svg",
   },
   {
     name: "Lunar Balance",
@@ -1071,7 +1071,7 @@ export const PROJECTS = [
     desc: "A calm, contemporary wellness experience with a dedicated sign-in page.",
     accent: "#a78bfa",
     num: "06",
-    localImg: null as string | null,
+    localImg: "/project-previews/lunar-balance.webp",
   },
 ];
 
@@ -1107,13 +1107,12 @@ function ProjectCard({ p }: { p: typeof PROJECTS[0] }) {
             loading="lazy"
             onLoad={() => setImgLoaded(true)}
             onError={() => setImgError(true)}
-            style={{ filter: p.localImg ? "none" : "brightness(0.65) saturate(1.1)" }}
             className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-700 ${imgLoaded ? "opacity-100 scale-100" : "opacity-0 scale-[1.03]"}`}
           />
         )}
 
         {/* Strong dark overlay — works for both light & dark site screenshots */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/65 to-black/25" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
         {/* Top browser bar */}
         <div
@@ -1211,59 +1210,16 @@ export function ProjectsSection() {
 }
 
 /* ============ Pricing ============ */
-const PRICING_PLANS: {
-  title: string;
-  kicker: string;
-  price: string;
-  description: string;
-  features: string[];
-  featured?: boolean;
-}[] = [
-  {
-    title: "Landing Page",
-    kicker: "One-page website",
-    price: "$50–$70",
-    description: "A focused, polished page to introduce your business and turn visits into enquiries.",
-    features: [
-      "Custom design shaped around your brand",
-      "Responsive layout for phones and desktops",
-      "Contact or WhatsApp call-to-action",
-      "Basic search and accessibility setup",
-      "Launch support and one revision round",
-    ],
-  },
-  {
-    title: "Business Website",
-    kicker: "Multi-page website",
-    price: "$120–$180",
-    description: "A complete online presence for businesses that need room to tell their story.",
-    features: [
-      "Up to five pages tailored to your services",
-      "Consistent custom styling across the site",
-      "Contact and enquiry pathways",
-      "Responsive performance and basic SEO setup",
-      "Launch support and two revision rounds",
-    ],
-  },
-  {
-    title: "Black Friday Website",
-    kicker: "Only 9 spots",
-    price: "$60",
-    description: "One complete, custom website for each of the first nine clients who claim this offer.",
-    features: [
-      "A custom-designed, mobile-ready website",
-      "Content organized around your business",
-      "A clear contact or WhatsApp action",
-      "Basic search-friendly page setup",
-      "Help getting your site ready to launch",
-      "One revision round after your review",
-    ],
-    featured: true,
-  },
-];
-
 export function PricingSection() {
   const ref = useReveal<HTMLDivElement>();
+  const features = [
+    "A custom-designed, mobile-ready website",
+    "Content organized around your business",
+    "A clear contact or WhatsApp action",
+    "Basic search-friendly page setup",
+    "Help getting your site ready to launch",
+    "One revision round after your review",
+  ];
 
   return (
     <section id="pricing" className="relative py-16 sm:py-20">
@@ -1274,86 +1230,62 @@ export function PricingSection() {
       />
       <div className="mx-auto max-w-6xl px-6">
         <SectionTitle
-          kicker="Pricing"
-          title={<>Clear, one-time <span className="text-gradient">website pricing</span></>}
-          subtitle="Straightforward project prices in USD. Choose a scope, then message me to get started."
+          kicker="Black Friday Offer"
+          title={<>One website. <span className="text-gradient">One flat price.</span></>}
+          subtitle="Only nine spots are available."
         />
 
-        <div
-          className="black-friday-callout mt-10 mx-auto flex max-w-4xl flex-col items-center justify-between gap-4 rounded-3xl border p-5 text-center sm:flex-row sm:p-6 sm:text-left"
-        >
-          <div className="flex items-center gap-3">
-            <div className="black-friday-flame flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl">
-              <Flame className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="font-display text-base font-bold sm:text-lg">🔥 Black Friday: $60 per website</div>
-              <div className="mt-0.5 text-xs">Only nine spots. No subscription or surprise fees.</div>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => scrollTo("black-friday")}
-            data-testid="button-view-black-friday-offer"
-            className="black-friday-callout-link inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition-transform hover:-translate-y-0.5"
+        <div ref={ref} className="reveal mt-8 mx-auto max-w-2xl">
+          <article
+            id="black-friday"
+            data-testid="card-pricing-black-friday"
+            className="pricing-card black-friday-card scroll-mt-32 rounded-[1.75rem] p-6 sm:p-8"
           >
-            Claim a spot <ArrowRight className="h-4 w-4" />
-          </button>
-        </div>
+            <div className="black-friday-ribbon mb-5 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.16em]">
+              <Flame className="h-3.5 w-3.5" /> Black Friday · 9 websites available
+            </div>
+            <div className="sale-accent text-xs font-bold uppercase tracking-[0.15em]">Limited offer</div>
+            <h3 className="font-display mt-3 text-2xl font-bold text-white sm:text-3xl">Black Friday Website</h3>
+            <p className="sale-muted mt-3 text-sm leading-relaxed">
+              One complete, custom-built website for your business. This offer is limited to the first nine clients.
+            </p>
+            <div className="mt-6 flex items-end gap-2">
+              <span className="sale-price font-display text-5xl font-extrabold tracking-tight sm:text-6xl">$60</span>
+              <span className="sale-muted pb-2 text-sm">one-time</span>
+            </div>
 
-        <div ref={ref} className="reveal mt-8 grid gap-6 lg:grid-cols-3 lg:items-stretch">
-          {PRICING_PLANS.map((plan) => (
-            <article
-              key={plan.title}
-              id={plan.featured ? "black-friday" : undefined}
-              data-testid={`card-pricing-${plan.featured ? "black-friday" : plan.title.toLowerCase().replaceAll(" ", "-")}`}
-              className={`pricing-card flex scroll-mt-32 flex-col rounded-[1.75rem] p-6 transition-all duration-300 sm:p-7 ${plan.featured ? "black-friday-card" : "glass hover:-translate-y-1 hover:border-electric/40"}`}
-            >
-              {plan.featured && (
-                <div className="black-friday-ribbon mb-5 inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.16em]">
-                  <Flame className="h-3.5 w-3.5" /> Black Friday · 9 available
-                </div>
-              )}
-              <div className={`text-xs font-bold uppercase tracking-[0.15em] ${plan.featured ? "sale-accent" : "text-electric-glow"}`}>
-                {plan.kicker}
-              </div>
-              <h3 className="font-display mt-3 text-2xl font-bold text-white">{plan.title}</h3>
-              <p className={`mt-3 min-h-12 text-sm leading-relaxed ${plan.featured ? "sale-muted" : "text-white/60"}`}>
-                {plan.description}
-              </p>
-              <div className="mt-7 flex items-end gap-2">
-                <span className={`font-display text-5xl font-extrabold tracking-tight sm:text-6xl ${plan.featured ? "sale-price" : "text-white"}`}>
-                  {plan.price}
-                </span>
-                <span className={`pb-2 text-sm ${plan.featured ? "sale-muted" : "text-white/55"}`}>one-time</span>
-              </div>
-              <ul className="mt-7 flex-1 space-y-3.5">
-                {plan.features.map((feature) => (
-                  <li key={feature} className={`flex items-start gap-3 text-sm leading-relaxed ${plan.featured ? "sale-feature" : "text-white/75"}`}>
-                    <span className={`mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full ${plan.featured ? "sale-check" : "bg-electric/20 text-electric-glow"}`}>
+            <details className="offer-details mt-7 rounded-2xl border border-white/10 bg-white/[0.03]">
+              <summary
+                data-testid="summary-black-friday-details"
+                className="offer-details-summary flex cursor-pointer list-none items-center justify-between gap-4 rounded-2xl px-4 py-4 text-sm font-semibold text-white transition-colors hover:bg-white/[0.04]"
+              >
+                What's included in the offer?
+                <ChevronDown className="offer-details-chevron h-4 w-4 flex-shrink-0 text-orange-300 transition-transform duration-200" />
+              </summary>
+              <ul className="space-y-3 px-4 pb-4">
+                {features.map((feature) => (
+                  <li key={feature} className="sale-feature flex items-start gap-3 text-sm leading-relaxed">
+                    <span className="sale-check mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full">
                       <Check className="h-3 w-3" />
                     </span>
                     {feature}
                   </li>
                 ))}
               </ul>
-              <div className="mt-8">
-                <GlowButton
-                  href={plan.featured ? BLACK_FRIDAY_WHATSAPP : WHATSAPP}
-                  dataTestId={plan.featured ? "button-claim-black-friday" : `button-discuss-${plan.title.toLowerCase().replaceAll(" ", "-")}`}
-                  variant="primary"
-                  className={`w-full ${plan.featured ? "sale-cta" : ""}`}
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  {plan.featured ? "Claim one of 9 spots" : "Discuss this website"}
-                </GlowButton>
-              </div>
-            </article>
-          ))}
+            </details>
+
+            <div className="mt-7">
+              <GlowButton
+                href={BLACK_FRIDAY_WHATSAPP}
+                dataTestId="button-claim-black-friday"
+                variant="primary"
+                className="sale-cta w-full"
+              >
+                <MessageCircle className="h-4 w-4" /> Claim one of 9 spots
+              </GlowButton>
+            </div>
+          </article>
         </div>
-        <p className="mt-6 text-center text-xs text-white/45">
-          All listed prices are one-time project fees in USD. Any third-party costs are discussed before work begins.
-        </p>
       </div>
     </section>
   );
