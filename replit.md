@@ -21,7 +21,7 @@ src/
     shared.tsx         — ALL site components: Navbar, Hero, About, Services,
                          Projects, Pricing, Reviews, FAQ, Contact, Footer
 public/
-  aman.jpg             — Aman's portrait photo
+  aman.png             — Aman's updated portrait photo
   pristine-preview.jpg — Pristine Smiles Studio project screenshot
 index.html             — HTML entry
 vite.config.ts         — Vite config (port 5000, host 0.0.0.0)
@@ -31,7 +31,7 @@ vercel.json            — SPA rewrite rules for Vercel deployment
 ## Running
 
 ```bash
-bun dev          # dev server on port 5000
+bun run dev      # Replit preview dev server on port 5000
 bun run build    # production build → dist/
 ```
 
@@ -48,9 +48,11 @@ bun run build    # production build → dist/
 
 ## User Preferences
 
-- Dark theme only (black background, electric blue accents)
+- Light theme by default with a user-controlled dark mode; electric blue accents
+- One-time USD website pricing only; Black Friday offers nine websites at $60 each
 - Single-page site with smooth scroll (no page routing)
 - Professional, premium aesthetic — not a "kids website"
 - Mobile-first responsive design
 - Touch/tap ripple animations on all interactive elements
 - Animated grid background with floating orbs
+- Black Friday website offer: $60 each for the first nine claimed spots

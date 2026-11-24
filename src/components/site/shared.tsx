@@ -12,7 +12,6 @@ import {
   Mail,
   Sparkles,
   Shield,
-  Zap,
   Menu,
   X,
   ChevronDown,
@@ -21,12 +20,18 @@ import {
   Eye,
   Banknote,
   Flame,
-  Clock,
+  Sun,
+  Moon,
+  Github,
+  Bot,
+  Heart,
   type LucideIcon,
 } from "lucide-react";
 
 export const WHATSAPP =
   "https://wa.me/916398505806?text=Hi%20Aman%2C%20I%27m%20interested%20in%20your%20website%20development%20services.";
+const BLACK_FRIDAY_WHATSAPP =
+  "https://wa.me/916398505806?text=Hi%20Aman%2C%20I%27d%20like%20to%20claim%20a%20Black%20Friday%20website%20for%20%2460.";
 
 /* ============ Smooth scroll helper ============ */
 function scrollTo(id: string) {
@@ -118,6 +123,7 @@ export function GlowButton({
   href,
   sectionId,
   onClick,
+  dataTestId,
   variant = "primary",
   className = "",
 }: {
@@ -125,6 +131,7 @@ export function GlowButton({
   href?: string;
   sectionId?: string;
   onClick?: () => void;
+  dataTestId?: string;
   variant?: "primary" | "ghost";
   className?: string;
 }) {
@@ -140,8 +147,8 @@ export function GlowButton({
     "group relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold tracking-wide overflow-hidden transition-all duration-200 active:scale-[0.94] cursor-pointer select-none touch-manipulation will-change-transform";
   const styles =
     variant === "primary"
-      ? "text-white shadow-[0_10px_40px_-10px_rgba(10,132,255,0.6)] hover:shadow-[0_20px_60px_-10px_rgba(10,132,255,0.95)] hover:-translate-y-0.5"
-      : "text-white border border-white/15 hover:border-electric-glow/60 hover:bg-electric/10 hover:-translate-y-0.5 active:bg-electric/20";
+      ? "glow-button-primary text-white shadow-[0_10px_40px_-10px_rgba(10,132,255,0.6)] hover:shadow-[0_20px_60px_-10px_rgba(10,132,255,0.95)] hover:-translate-y-0.5"
+      : "glow-button-ghost text-white border border-white/15 hover:border-electric-glow/60 hover:bg-electric/10 hover:-translate-y-0.5 active:bg-electric/20";
 
   const inner = (
     <>
@@ -171,6 +178,7 @@ export function GlowButton({
       <button
         onPointerDown={handle}
         onClick={() => { scrollTo(sectionId); onClick?.(); }}
+        data-testid={dataTestId}
         className={`${base} ${styles} ${className}`}
       >
         {inner}
@@ -185,6 +193,7 @@ export function GlowButton({
         rel="noreferrer"
         onPointerDown={handle}
         onClick={onClick}
+        data-testid={dataTestId}
         className={`${base} ${styles} ${className}`}
       >
         {inner}
@@ -195,6 +204,7 @@ export function GlowButton({
     <button
       onPointerDown={handle}
       onClick={onClick}
+      data-testid={dataTestId}
       className={`${base} ${styles} ${className}`}
     >
       {inner}
@@ -364,7 +374,7 @@ export function SectionTitle({ kicker, title, subtitle }: {
 export function PageBackground() {
   return (
     <>
-      <div className="fixed inset-0 -z-20 bg-black" />
+      <div className="page-background-base fixed inset-0 -z-20" />
       <div className="fixed inset-0 -z-10 grid-bg opacity-40" />
       {/* Aurora top */}
       <div
@@ -476,7 +486,13 @@ const NAV_LINKS = [
   { label: "Contact", id: "contact" },
 ] as const;
 
-export function Navbar() {
+export function Navbar({
+  theme,
+  onThemeChange,
+}: {
+  theme: "light" | "dark";
+  onThemeChange: () => void;
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("home");
@@ -505,13 +521,24 @@ export function Navbar() {
 
   return (
     <>
-      <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "py-2" : "py-4"}`}>
+      <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "pb-2" : "pb-4"}`}>
+        <button
+          type="button"
+          onClick={() => scrollTo("black-friday")}
+          data-testid="button-black-friday-banner"
+          className="black-friday-banner flex min-h-9 w-full items-center justify-center gap-2 px-3 py-2 text-center text-[10px] font-extrabold uppercase tracking-[0.12em] text-white sm:text-xs"
+        >
+          <Flame className="h-3.5 w-3.5 flex-shrink-0" />
+          <span>🔥 Black Friday 🖤 · 9 websites · $60 each</span>
+          <span className="hidden rounded-full border border-white/35 px-2 py-0.5 text-[9px] sm:inline">See offer</span>
+        </button>
         <nav className={`mx-auto flex max-w-6xl items-center justify-between rounded-full px-4 sm:px-5 py-3 mx-3 sm:mx-auto transition-all duration-500 ${scrolled ? "glass border border-white/10 shadow-[0_10px_40px_-20px_rgba(10,132,255,0.5)]" : "border border-transparent"}`}>
           <button
             onClick={() => scrollTo("home")}
+            data-testid="button-home"
             className="flex items-center gap-2 group active:scale-95 transition-transform"
           >
-            <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-electric to-electric-deep text-white font-bold shadow-[0_0_20px_rgba(10,132,255,0.5)] transition-transform group-hover:scale-110 group-hover:rotate-3">
+            <span className="brand-chip relative inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-electric to-electric-deep text-white font-bold shadow-[0_0_20px_rgba(10,132,255,0.5)] transition-transform group-hover:scale-110 group-hover:rotate-3">
               AD
             </span>
             <span className="hidden sm:block text-sm font-semibold tracking-wide text-white">
@@ -535,12 +562,23 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onThemeChange}
+              aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+              aria-pressed={theme === "dark"}
+              data-testid="button-theme-toggle"
+              className="theme-toggle inline-flex h-10 w-10 items-center justify-center rounded-full glass border border-white/10 transition-transform hover:-translate-y-0.5 active:scale-90"
+            >
+              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            </button>
             <GlowButton href={WHATSAPP} className="!px-4 !py-2.5 !text-xs hidden sm:inline-flex">
               Hire Me <ArrowRight className="h-3.5 w-3.5" />
             </GlowButton>
             <button
               onClick={() => setOpen((o) => !o)}
               aria-label="Toggle menu"
+              data-testid="button-menu-toggle"
               className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-full glass border border-white/10 text-white active:scale-90 transition-transform"
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -597,7 +635,7 @@ export function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-electric to-electric-deep text-white font-bold text-sm shadow-[0_8px_24px_-8px_rgba(10,132,255,0.6)]">
+              <span className="brand-chip inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-electric to-electric-deep text-white font-bold text-sm shadow-[0_8px_24px_-8px_rgba(10,132,255,0.6)]">
                 AD
               </span>
               <div>
@@ -781,7 +819,7 @@ export function AboutSection() {
             {/* Static image layer — not affected by the spin */}
             <div className="relative overflow-hidden rounded-[1.85rem] bg-black">
               <img
-                src="/aman.jpg"
+                src="/aman.png"
                 alt="Aman Dantani — Website Developer"
                 loading="lazy"
                 className="block w-full h-auto object-cover object-center aspect-[3/4] transition-transform duration-700 hover:scale-105"
@@ -853,14 +891,27 @@ export function AboutSection() {
 
           {/* Tech stack */}
           <div className="mt-7">
-            <div className="text-[10px] uppercase tracking-widest text-white/40 mb-3">Tech Stack</div>
+            <div className="text-[10px] uppercase tracking-widest text-white/40 mb-3">Tools I Build With</div>
             <div className="flex flex-wrap gap-2">
-              {["React", "TypeScript", "Tailwind CSS", "Vite", "Next.js", "Vercel", "Cloudflare", "Figma"].map((tech) => (
+              {[
+                { name: "JSON", mark: "{}", color: "#64748b", icon: undefined },
+                { name: "Python", mark: "Py", color: "#3776ab", icon: undefined },
+                { name: "GitHub", mark: "gh", color: "#24292f", icon: Github },
+                { name: "Vercel", mark: "▲", color: "#111827", icon: undefined },
+                { name: "Replit", mark: "R", color: "#f26207", icon: undefined },
+                { name: "Lovable", mark: "♥", color: "#e85d75", icon: Heart },
+                { name: "Claude Code", mark: "✳", color: "#d97757", icon: undefined },
+                { name: "ChatGPT", mark: "AI", color: "#10a37f", icon: Bot },
+              ].map(({ name, mark, color, icon: Icon }) => (
                 <span
-                  key={tech}
-                  className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/70 transition-all hover:border-electric/40 hover:text-electric-glow hover:bg-electric/5"
+                  key={name}
+                  data-testid={`tool-badge-${name.toLowerCase().replaceAll(" ", "-")}`}
+                  className="tool-badge inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-medium text-white/75 transition-all hover:-translate-y-0.5 hover:border-electric/40"
                 >
-                  {tech}
+                  <span className="brand-tool-mark" style={{ color }}>
+                    {Icon ? <Icon className="h-3.5 w-3.5" /> : mark}
+                  </span>
+                  {name}
                 </span>
               ))}
             </div>
@@ -949,44 +1000,62 @@ export function ServicesSection() {
 /* ============ Projects ============ */
 export const PROJECTS = [
   {
-    name: "Pristine Smiles Studio",
-    tag: "Dental Studio",
-    url: "https://pristine-smiles-studio.vercel.app/",
-    desc: "Premium dental studio website with treatment menu, gallery and conversion-focused booking flow.",
+    name: "NexGen Digital Canvas",
+    tag: "Digital Studio",
+    url: "https://nexgen-digital-canvas.vercel.app/",
+    desc: "A live digital studio website with a distinctive visual identity and a polished online experience.",
     accent: "#0a84ff",
     num: "01",
-    localImg: "/pristine-preview.jpg",
+    localImg: null as string | null,
   },
   {
-    name: "Artful Smiles",
-    tag: "Dental Clinic",
-    url: "https://artful-smiles-web.vercel.app/",
-    desc: "Elegant dental clinic website with appointment booking, services showcase and patient-friendly UX.",
+    name: "Advance Speech & Hearing",
+    tag: "Health & Wellness",
+    url: "https://www.advancespeechandhearing.com/",
+    desc: "A welcoming online destination for speech and hearing care.",
     accent: "#3da9ff",
     num: "02",
     localImg: null as string | null,
   },
   {
-    name: "Gentle Smiles Dental",
-    tag: "Dental Practice",
-    url: "https://gentle-smiles-dental.dantaniaman506.workers.dev/",
-    desc: "Modern dental practice site hosted on edge — lightning fast, calming UI, clear calls to action.",
-    accent: "#1e40af",
+    name: "Smile Architects Studio",
+    tag: "Dental Studio",
+    url: "https://smile-architects-studio.vercel.app/",
+    desc: "A modern dental studio website designed to make services easy to explore.",
+    accent: "#f97380",
     num: "03",
     localImg: null as string | null,
   },
   {
-    name: "Pixel Perfect Pages",
-    tag: "Agency Landing Page",
-    url: "https://pixel-perfect-pages-chi.vercel.app/",
-    desc: "Pixel-perfect agency landing page with rich animations, sticky nav and crisp typography.",
-    accent: "#2563eb",
+    name: "Glam by Dia",
+    tag: "Beauty & Lifestyle",
+    url: "https://glam-by-dia-website-xvwf.vercel.app/",
+    desc: "A stylish beauty brand website with an elegant, easy-to-browse presentation.",
+    accent: "#d946a6",
     num: "04",
+    localImg: null as string | null,
+  },
+  {
+    name: "Growth Catalyst",
+    tag: "Business",
+    url: "https://growth-catalyst-site-one.vercel.app/",
+    desc: "A focused business website for presenting services and helping visitors take action.",
+    accent: "#22c55e",
+    num: "05",
+    localImg: null as string | null,
+  },
+  {
+    name: "Lunar Balance",
+    tag: "Wellness",
+    url: "https://lunar-balance-flux.vercel.app/auth",
+    desc: "A calm, contemporary wellness experience with a dedicated sign-in page.",
+    accent: "#a78bfa",
+    num: "06",
     localImg: null as string | null,
   },
 ];
 
-function ProjectCard({ p, featured = false }: { p: typeof PROJECTS[0]; featured?: boolean }) {
+function ProjectCard({ p }: { p: typeof PROJECTS[0] }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
   const imgSrc = p.localImg ?? `https://image.thum.io/get/width/1200/crop/675/noanimate/${p.url}`;
@@ -994,11 +1063,11 @@ function ProjectCard({ p, featured = false }: { p: typeof PROJECTS[0]; featured?
   return (
     <TapCard
       href={p.url}
-      className={`rc reveal-child block glass overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_-30px_rgba(10,132,255,0.5)] hover:border-electric/50 ${featured ? "rounded-3xl" : "rounded-2xl"}`}
+      className="rc reveal-child block glass overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_40px_100px_-30px_rgba(10,132,255,0.5)] hover:border-electric/50"
     >
       {/* Screenshot preview */}
       <div
-        className={`relative overflow-hidden ${featured ? "aspect-[16/8]" : "aspect-[16/9]"}`}
+        className="relative aspect-[16/9] overflow-hidden"
         style={{ background: `linear-gradient(135deg, #060a14 0%, ${p.accent}18 60%, #030609 100%)` }}
       >
         {/* Fallback bg pattern */}
@@ -1064,10 +1133,10 @@ function ProjectCard({ p, featured = false }: { p: typeof PROJECTS[0]; featured?
       </div>
 
       {/* Card body */}
-      <div className={`${featured ? "p-7" : "p-5"}`}>
+      <div className="p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
-            <h3 className={`font-bold text-white leading-snug ${featured ? "text-xl" : "text-base"}`}>{p.name}</h3>
+            <h3 className="font-bold text-white leading-snug">{p.name}</h3>
             <p className="mt-1.5 text-sm text-white/55 leading-relaxed">{p.desc}</p>
           </div>
           <div
@@ -1088,8 +1157,6 @@ function ProjectCard({ p, featured = false }: { p: typeof PROJECTS[0]; featured?
 
 export function ProjectsSection() {
   const ref = useStaggerReveal<HTMLDivElement>(120);
-  const [featured, ...rest] = PROJECTS;
-
   return (
     <section id="projects" className="relative py-20 sm:py-28">
       <div
@@ -1104,16 +1171,10 @@ export function ProjectsSection() {
           subtitle="Real client websites — built, live, and converting. Click any card to visit live."
         />
 
-        <div ref={ref} className="mt-14 space-y-5">
-          {/* Featured — full width */}
-          <ProjectCard p={featured} featured />
-
-          {/* Rest — 3 in a row on desktop, 1 col on mobile */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {rest.map((p) => (
-              <ProjectCard key={p.url} p={p} />
-            ))}
-          </div>
+        <div ref={ref} className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {PROJECTS.map((p) => (
+            <ProjectCard key={p.url} p={p} />
+          ))}
         </div>
 
         <div className="mt-10 text-center">
@@ -1129,85 +1190,60 @@ export function ProjectsSection() {
   );
 }
 
-/* ============ Countdown hook ============ */
-function useCountdown(hours = 24) {
-  const endRef = useRef(Date.now() + hours * 3_600_000);
-  const [rem, setRem] = useState(hours * 3_600_000);
-  useEffect(() => {
-    const id = setInterval(() => setRem(Math.max(0, endRef.current - Date.now())), 1000);
-    return () => clearInterval(id);
-  }, []);
-  const h = Math.floor(rem / 3_600_000).toString().padStart(2, "0");
-  const m = Math.floor((rem % 3_600_000) / 60_000).toString().padStart(2, "0");
-  const s = Math.floor((rem % 60_000) / 1_000).toString().padStart(2, "0");
-  return { h, m, s };
-}
-
-function TimeBox({ val, label }: { val: string; label: string }) {
-  return (
-    <div className="flex flex-col items-center">
-      <div
-        className="min-w-[52px] sm:min-w-[60px] rounded-xl px-3 py-2 text-center text-2xl sm:text-3xl font-bold text-white tabular-nums font-display"
-        style={{
-          background: "linear-gradient(135deg, rgba(10,132,255,0.25), rgba(30,58,138,0.3))",
-          border: "1px solid rgba(10,132,255,0.35)",
-          boxShadow: "0 0 20px rgba(10,132,255,0.15)",
-        }}
-      >
-        {val}
-      </div>
-      <span className="mt-1 text-[9px] uppercase tracking-widest text-white/40">{label}</span>
-    </div>
-  );
-}
-
 /* ============ Pricing ============ */
+const PRICING_PLANS: {
+  title: string;
+  kicker: string;
+  price: string;
+  description: string;
+  features: string[];
+  featured?: boolean;
+}[] = [
+  {
+    title: "Landing Page",
+    kicker: "One-page website",
+    price: "$50–$70",
+    description: "A focused, polished page to introduce your business and turn visits into enquiries.",
+    features: [
+      "Custom design shaped around your brand",
+      "Responsive layout for phones and desktops",
+      "Contact or WhatsApp call-to-action",
+      "Basic search and accessibility setup",
+      "Launch support and one revision round",
+    ],
+  },
+  {
+    title: "Business Website",
+    kicker: "Multi-page website",
+    price: "$120–$180",
+    description: "A complete online presence for businesses that need room to tell their story.",
+    features: [
+      "Up to five pages tailored to your services",
+      "Consistent custom styling across the site",
+      "Contact and enquiry pathways",
+      "Responsive performance and basic SEO setup",
+      "Launch support and two revision rounds",
+    ],
+  },
+  {
+    title: "Black Friday Website",
+    kicker: "Only 9 spots",
+    price: "$60",
+    description: "One complete, custom website for each of the first nine clients who claim this offer.",
+    features: [
+      "A custom-designed, mobile-ready website",
+      "Content organized around your business",
+      "A clear contact or WhatsApp action",
+      "Basic search-friendly page setup",
+      "Help getting your site ready to launch",
+      "One revision round after your review",
+    ],
+    featured: true,
+  },
+];
+
 export function PricingSection() {
   const ref = useReveal<HTMLDivElement>();
-  const { h, m, s } = useCountdown(24);
-
-  const plans = [
-    {
-      kicker: "Flexible Plan",
-      title: "Monthly Maintenance",
-      originalPrice: "₹750",
-      price: "₹300",
-      cycle: "/month",
-      originalDev: "₹10,000 – ₹15,000",
-      dev: "₹4,000 – ₹6,000",
-      saving: "60% OFF",
-      features: [
-        "Full website development (one-time)",
-        "Monthly maintenance at ₹300/mo",
-        "Domain & hosting included",
-        "Bug fixes & content updates",
-        "WhatsApp support",
-      ],
-      cta: "Get Started",
-      highlight: false,
-    },
-    {
-      kicker: "Best Value",
-      title: "Annual Maintenance",
-      originalPrice: "₹7,500",
-      price: "₹3,000",
-      cycle: "/year",
-      originalDev: "₹10,000 – ₹15,000",
-      dev: "₹4,000 – ₹6,000",
-      saving: "60% OFF",
-      equivalent: "≈ ₹250 / month",
-      features: [
-        "Full website development (one-time)",
-        "Annual maintenance at ₹3,000/yr",
-        "Equivalent to just ₹250/month",
-        "No recurring monthly payments",
-        "Priority WhatsApp support",
-        "Free minor design tweaks",
-      ],
-      cta: "Choose Annual — Save ₹600",
-      highlight: true,
-    },
-  ];
 
   return (
     <section id="pricing" className="relative py-20 sm:py-28">
@@ -1219,154 +1255,85 @@ export function PricingSection() {
       <div className="mx-auto max-w-6xl px-6">
         <SectionTitle
           kicker="Pricing"
-          title={<>Transparent <span className="text-gradient">Pricing Plans</span></>}
-          subtitle="Pick a plan. Get a beautiful website. Pay only for what you need."
+          title={<>Clear, one-time <span className="text-gradient">website pricing</span></>}
+          subtitle="Straightforward project prices in USD. Choose a scope, then message me to get started."
         />
 
-        {/* Urgency banner with timer */}
         <div
-          className="mt-10 mx-auto max-w-3xl rounded-2xl border border-electric/30 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-5"
-          style={{ background: "linear-gradient(135deg, rgba(10,132,255,0.1), rgba(30,58,138,0.15))", backdropFilter: "blur(12px)" }}
+          className="black-friday-callout mt-10 mx-auto flex max-w-4xl flex-col items-center justify-between gap-4 rounded-3xl border p-5 text-center sm:flex-row sm:p-6 sm:text-left"
         >
-          <div className="flex items-center gap-3 text-center sm:text-left">
-            <div
-              className="flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg, #0a84ff, #1e3a8a)", boxShadow: "0 0 16px rgba(10,132,255,0.4)" }}
-            >
-              <Flame className="h-5 w-5 text-white" />
+          <div className="flex items-center gap-3">
+            <div className="black-friday-flame flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl">
+              <Flame className="h-5 w-5" />
             </div>
             <div>
-              <div className="font-display text-base sm:text-lg font-bold text-white">Limited Time Offer — 60% Off</div>
-              <div className="text-xs text-white/55 mt-0.5">Prices go back to full rate when this session ends</div>
+              <div className="font-display text-base font-bold sm:text-lg">🔥 Black Friday: $60 per website</div>
+              <div className="mt-0.5 text-xs">Only nine spots. No subscription or surprise fees.</div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <TimeBox val={h} label="hrs" />
-            <span className="text-2xl font-bold text-electric-glow/60 pb-4">:</span>
-            <TimeBox val={m} label="min" />
-            <span className="text-2xl font-bold text-electric-glow/60 pb-4">:</span>
-            <TimeBox val={s} label="sec" />
-          </div>
+          <button
+            type="button"
+            onClick={() => scrollTo("black-friday")}
+            data-testid="button-view-black-friday-offer"
+            className="black-friday-callout-link inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition-transform hover:-translate-y-0.5"
+          >
+            Claim a spot <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
 
-        <div ref={ref} className="reveal mt-8 grid gap-8 lg:grid-cols-2 lg:items-stretch">
-          {plans.map((p) => (
-            <div
-              key={p.title}
-              className={`group relative rounded-3xl p-[1.5px] transition-all duration-500 ${p.highlight ? "shadow-[0_30px_80px_-20px_rgba(10,132,255,0.55)] hover:-translate-y-2" : "hover:-translate-y-1"}`}
-              style={p.highlight
-                ? { background: "conic-gradient(from 0deg, #0a84ff, #3da9ff, #1e40af, #0a84ff)" }
-                : { background: "rgba(255,255,255,0.08)" }
-              }
+        <div ref={ref} className="reveal mt-8 grid gap-6 lg:grid-cols-3 lg:items-stretch">
+          {PRICING_PLANS.map((plan) => (
+            <article
+              key={plan.title}
+              id={plan.featured ? "black-friday" : undefined}
+              data-testid={`card-pricing-${plan.featured ? "black-friday" : plan.title.toLowerCase().replaceAll(" ", "-")}`}
+              className={`pricing-card flex scroll-mt-32 flex-col rounded-[1.75rem] p-6 transition-all duration-300 sm:p-7 ${plan.featured ? "black-friday-card" : "glass hover:-translate-y-1 hover:border-electric/40"}`}
             >
-              {p.highlight && (
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 rounded-3xl opacity-35 blur-2xl"
-                  style={{ background: "conic-gradient(from 0deg, #0a84ff, #3da9ff, #1e40af, #0a84ff)", animation: "border-spin 8s linear infinite" }}
-                />
+              {plan.featured && (
+                <div className="black-friday-ribbon mb-5 inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] font-black uppercase tracking-[0.16em]">
+                  <Flame className="h-3.5 w-3.5" /> Black Friday · 9 available
+                </div>
               )}
-              <div className="relative rounded-3xl bg-[#04060d] p-7 sm:p-10 h-full flex flex-col">
-                {p.highlight && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-electric to-electric-glow px-5 py-1.5 text-[11px] font-bold tracking-widest text-white shadow-[0_10px_30px_-10px_rgba(10,132,255,0.8)] whitespace-nowrap">
-                    RECOMMENDED
-                  </div>
-                )}
-
-                {/* Plan header */}
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-electric-glow">
-                    {p.highlight ? <Star className="h-3.5 w-3.5" /> : <Zap className="h-3.5 w-3.5" />}
-                    {p.kicker}
-                  </div>
-                  <span
-                    className="rounded-full px-3 py-1 text-[11px] font-bold tracking-wider text-white"
-                    style={{ background: "linear-gradient(135deg, #0a84ff, #1e3a8a)", boxShadow: "0 4px 14px rgba(10,132,255,0.4)" }}
-                  >
-                    {p.saving}
-                  </span>
-                </div>
-
-                <h3 className="font-display mt-3 text-xl sm:text-2xl font-bold text-white">{p.title}</h3>
-
-                {/* Maintenance price with crossed original */}
-                <div className="mt-6">
-                  <div className="text-[11px] uppercase tracking-widest text-white/40 mb-2">Maintenance</div>
-                  <div className="flex items-end gap-3">
-                    <div>
-                      <span className="text-sm text-white/35 line-through">{p.originalPrice}</span>
-                      <div className="flex items-end gap-1.5">
-                        <span className="font-display text-5xl sm:text-6xl font-bold text-white tracking-tight">{p.price}</span>
-                        <span className="pb-2 text-white/55 text-sm">{p.cycle}</span>
-                      </div>
-                    </div>
-                  </div>
-                  {p.equivalent && (
-                    <div className="mt-1 text-xs text-electric-glow">{p.equivalent}</div>
-                  )}
-                </div>
-
-                {/* Development cost with crossed original */}
-                <div className="mt-5 rounded-2xl border border-white/8 bg-white/[0.02] p-4">
-                  <div className="text-[11px] uppercase tracking-widest text-white/40 mb-1.5">Website Development — One-Time</div>
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <span className="text-sm text-white/35 line-through">{p.originalDev}</span>
-                    <span className="text-lg font-bold text-white">{p.dev}</span>
-                  </div>
-                </div>
-
-                {/* Save highlight for annual */}
-                {p.highlight && (
-                  <div
-                    className="mt-4 flex items-center gap-3 rounded-xl border border-electric/30 p-4"
-                    style={{ background: "rgba(10,132,255,0.08)" }}
-                  >
-                    <div
-                      className="flex-shrink-0 h-9 w-9 rounded-full flex items-center justify-center"
-                      style={{ background: "linear-gradient(135deg, #0a84ff, #1e3a8a)" }}
-                    >
-                      <Zap className="h-4 w-4 text-white" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold text-white">Save ₹600 vs monthly</div>
-                      <div className="text-xs text-white/55">₹3,600/yr monthly → ₹3,000/yr annual</div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Features */}
-                <ul className="mt-6 space-y-3 flex-1">
-                  {p.features.map((f) => (
-                    <li key={f} className="flex items-start gap-3 text-sm text-white/75">
-                      <span className="mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-electric/20 text-electric-glow">
-                        <Check className="h-3 w-3" />
-                      </span>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-8">
-                  <GlowButton href={WHATSAPP} variant={p.highlight ? "primary" : "ghost"} className="w-full">
-                    <MessageCircle className="h-4 w-4" /> {p.cta}
-                  </GlowButton>
-                </div>
+              <div className={`text-xs font-bold uppercase tracking-[0.15em] ${plan.featured ? "sale-accent" : "text-electric-glow"}`}>
+                {plan.kicker}
               </div>
-            </div>
+              <h3 className="font-display mt-3 text-2xl font-bold text-white">{plan.title}</h3>
+              <p className={`mt-3 min-h-12 text-sm leading-relaxed ${plan.featured ? "sale-muted" : "text-white/60"}`}>
+                {plan.description}
+              </p>
+              <div className="mt-7 flex items-end gap-2">
+                <span className={`font-display text-5xl font-extrabold tracking-tight sm:text-6xl ${plan.featured ? "sale-price" : "text-white"}`}>
+                  {plan.price}
+                </span>
+                <span className={`pb-2 text-sm ${plan.featured ? "sale-muted" : "text-white/55"}`}>one-time</span>
+              </div>
+              <ul className="mt-7 flex-1 space-y-3.5">
+                {plan.features.map((feature) => (
+                  <li key={feature} className={`flex items-start gap-3 text-sm leading-relaxed ${plan.featured ? "sale-feature" : "text-white/75"}`}>
+                    <span className={`mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full ${plan.featured ? "sale-check" : "bg-electric/20 text-electric-glow"}`}>
+                      <Check className="h-3 w-3" />
+                    </span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8">
+                <GlowButton
+                  href={plan.featured ? BLACK_FRIDAY_WHATSAPP : WHATSAPP}
+                  dataTestId={plan.featured ? "button-claim-black-friday" : `button-discuss-${plan.title.toLowerCase().replaceAll(" ", "-")}`}
+                  variant="primary"
+                  className={`w-full ${plan.featured ? "sale-cta" : ""}`}
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  {plan.featured ? "Claim one of 9 spots" : "Discuss this website"}
+                </GlowButton>
+              </div>
+            </article>
           ))}
         </div>
-
-        {/* Included in all plans */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 rounded-2xl glass px-6 py-5 text-sm text-white/65">
-          <div className="flex items-center gap-2 font-medium text-white/80">
-            <Shield className="h-4 w-4 text-electric-glow" /> All plans include:
-          </div>
-          {["SSL Certificate", "Domain Setup", "Responsive Design", "Basic SEO"].map((x) => (
-            <span key={x} className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-electric-glow" /> {x}
-            </span>
-          ))}
-        </div>
+        <p className="mt-6 text-center text-xs text-white/45">
+          All listed prices are one-time project fees in USD. Any third-party costs are discussed before work begins.
+        </p>
       </div>
     </section>
   );
@@ -1378,7 +1345,7 @@ export const REVIEWS = [
     name: "Dr. Vandana",
     role: "Oro-Dental Surgeon & Implantologist",
     site: "Artful Smiles",
-    text: "Aman delivered exactly the look I wanted — calm, premium and trustworthy. Patients now book appointments directly from the website. Worth every rupee.",
+    text: "Aman delivered exactly the look I wanted — calm, premium and trustworthy. Patients now book appointments directly from the website. Worth every bit.",
     rating: 5,
   },
   {
@@ -1422,8 +1389,8 @@ function Marquee({ items, direction }: { items: typeof REVIEWS; direction: "left
   const looped = [...items, ...items];
   return (
     <div className="relative overflow-hidden">
-      <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-black to-transparent" />
-      <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-black to-transparent" />
+      <div aria-hidden className="reviews-fade-left pointer-events-none absolute inset-y-0 left-0 z-10 w-16" />
+      <div aria-hidden className="reviews-fade-right pointer-events-none absolute inset-y-0 right-0 z-10 w-16" />
       <div
         className="flex gap-5 w-max"
         style={{
@@ -1434,7 +1401,7 @@ function Marquee({ items, direction }: { items: typeof REVIEWS; direction: "left
         {looped.map((r, i) => (
           <article
             key={i}
-            className="w-[300px] sm:w-[380px] flex-shrink-0 glass rounded-2xl p-6 transition-all hover:border-electric/40 active:scale-[0.98]"
+            className="w-[260px] sm:w-[300px] flex-shrink-0 glass rounded-[1.5rem] border border-white/10 p-5 shadow-[0_16px_44px_-28px_rgba(10,132,255,0.5)] transition-all hover:border-electric/40 active:scale-[0.98]"
           >
             <div className="flex items-center gap-1 text-electric-glow">
               {Array.from({ length: r.rating }).map((_, k) => (
@@ -1507,7 +1474,7 @@ const PROCESS_STEPS: { num: string; icon: LucideIcon; title: string; desc: strin
     num: "04",
     icon: Banknote,
     title: "Transparent Pricing Talk",
-    desc: "Once you approve the demo, we discuss budget and features openly. Every rupee is clear upfront — no hidden charges, no surprises of any kind.",
+    desc: "Once you approve the demo, we discuss the budget and features openly. Every cost is clear upfront — no hidden charges or surprises.",
     tag: "No Hidden Fees",
     accent: "#3da9ff",
   },
@@ -1655,11 +1622,11 @@ const FAQ_ITEMS = [
   },
   {
     q: "How many revisions do I get?",
-    a: "Unlimited revisions during development until you're 100% happy. I don't stop until the website looks exactly the way you imagined it.",
+    a: "Each website package includes its stated revision rounds. We'll agree on the scope and revision details before work begins.",
   },
   {
-    q: "What's included in the maintenance plan?",
-    a: "Monthly/annual maintenance covers bug fixes, small content updates (text, images), SSL renewal, domain management and priority WhatsApp support.",
+    q: "What is included in the website price?",
+    a: "Each package lists its pages, design, launch support and revision rounds. Any third-party costs are discussed and agreed before work begins.",
   },
   {
     q: "Can you redesign my existing website?",
@@ -1667,7 +1634,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Do you provide hosting?",
-    a: "Yes — I handle domain setup and host your site on fast, modern infrastructure (Vercel / Cloudflare). Everything is included in the maintenance plan.",
+    a: "I'll help you publish your site on suitable hosting. Domain and other third-party costs are discussed separately before work begins.",
   },
   {
     q: "What if I'm not happy with the result?",

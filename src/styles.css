@@ -83,9 +83,10 @@
   }
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 7rem;
   }
   body {
-    background-color: #000;
+    background-color: var(--background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -100,7 +101,7 @@
     width: 4px;
   }
   ::-webkit-scrollbar-track {
-    background: #000;
+    background: var(--background);
   }
   ::-webkit-scrollbar-thumb {
     background: rgba(10, 132, 255, 0.45);
@@ -108,6 +109,191 @@
   }
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(61, 169, 255, 0.7);
+  }
+}
+
+/* ===== Portfolio theme and campaign styling ===== */
+html[data-theme="light"] body {
+  background-color: #f5f8fc;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="light"] .page-background-base {
+  background: #f5f8fc;
+}
+
+html[data-theme="light"] .glass {
+  background: rgba(255, 255, 255, 0.74);
+  border-color: rgba(28, 44, 72, 0.1);
+  box-shadow: 0 16px 50px -38px rgba(27, 55, 95, 0.45);
+  backdrop-filter: blur(24px) saturate(160%);
+}
+
+html[data-theme="light"] [class~="text-white"],
+html[data-theme="light"] [class*="text-white/"] {
+  color: #25344b !important;
+}
+
+html[data-theme="light"] [class*="border-white/"] {
+  border-color: rgba(26, 45, 74, 0.12) !important;
+}
+
+html[data-theme="light"] [class*="bg-white/"] {
+  background-color: rgba(31, 58, 92, 0.04) !important;
+}
+
+html[data-theme="light"] [class~="bg-black"],
+html[data-theme="light"] [class*="bg-black/"] {
+  background-color: rgba(249, 251, 255, 0.88) !important;
+}
+
+html[data-theme="light"] .text-gradient {
+  background-image: linear-gradient(135deg, #17243d 0%, #168be8 52%, #0668ca 100%);
+}
+
+html[data-theme="light"] .brand-chip,
+html[data-theme="light"] .black-friday-banner,
+html[data-theme="light"] .black-friday-banner [class~="text-white"],
+html[data-theme="light"] .glow-button-primary {
+  color: #fff !important;
+}
+
+.black-friday-banner {
+  background: linear-gradient(100deg, #991c10 0%, #ed4b18 48%, #f28a16 100%);
+  box-shadow: 0 6px 24px -15px rgba(235, 73, 23, 0.85);
+  transition: filter 180ms ease;
+}
+
+.black-friday-banner:hover {
+  filter: brightness(1.12);
+}
+
+.theme-toggle {
+  color: var(--foreground);
+}
+
+.black-friday-callout {
+  color: #fff;
+  border-color: rgba(255, 103, 39, 0.34);
+  background:
+    radial-gradient(ellipse at 10% 50%, rgba(255, 112, 35, 0.19), transparent 55%),
+    linear-gradient(110deg, #151013, #241015 52%, #180d10);
+  box-shadow: 0 18px 55px -34px rgba(224, 58, 33, 0.5);
+}
+
+.black-friday-flame {
+  color: #fff;
+  background: linear-gradient(140deg, #ff9b25, #ed352b);
+  box-shadow: 0 0 26px rgba(255, 93, 26, 0.4);
+}
+
+.black-friday-callout-link {
+  color: #fff;
+  background: linear-gradient(110deg, #ff9d26, #f14828);
+  box-shadow: 0 8px 25px -12px rgba(255, 94, 25, 0.8);
+}
+
+.black-friday-card {
+  position: relative;
+  color: #fff;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(155deg, #151011 0%, #0c0a0b 55%, #1a0c0b 100%) padding-box,
+    linear-gradient(135deg, #ffad32, #ff572a 47%, #db2525) border-box;
+  box-shadow: 0 25px 80px -38px rgba(233, 72, 35, 0.62);
+}
+
+.black-friday-card::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(ellipse at 90% 0%, rgba(255, 88, 28, 0.19), transparent 44%);
+  content: "";
+  pointer-events: none;
+}
+
+.black-friday-ribbon {
+  color: #fff;
+  background: linear-gradient(100deg, #ff9824, #f23d2b);
+  box-shadow: 0 5px 24px -13px rgba(255, 94, 25, 0.9);
+}
+
+.sale-accent {
+  color: #ff9b47;
+}
+
+.sale-price {
+  color: #ff762d;
+  background: linear-gradient(120deg, #ffd27b, #ff762d 58%, #ff3932);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sale-muted {
+  color: rgba(255, 239, 229, 0.65);
+}
+
+.sale-feature {
+  color: rgba(255, 250, 245, 0.88);
+}
+
+.sale-check {
+  color: #fff;
+  background: linear-gradient(140deg, #ff9c2b, #f1412b);
+}
+
+.sale-cta {
+  color: #fff !important;
+  box-shadow: 0 12px 35px -14px rgba(255, 83, 31, 0.85) !important;
+}
+
+.sale-cta > span:first-child {
+  background: linear-gradient(115deg, #ff9c23, #f34a25, #d91f2b) !important;
+}
+
+.reviews-fade-left {
+  background: linear-gradient(to right, #000, transparent);
+}
+
+.reviews-fade-right {
+  background: linear-gradient(to left, #000, transparent);
+}
+
+html[data-theme="light"] .reviews-fade-left {
+  background: linear-gradient(to right, #f5f8fc, transparent);
+}
+
+html[data-theme="light"] .reviews-fade-right {
+  background: linear-gradient(to left, #f5f8fc, transparent);
+}
+
+.tool-badge {
+  box-shadow: 0 8px 24px -20px rgba(10, 132, 255, 0.7);
+}
+
+.brand-tool-mark {
+  display: inline-grid;
+  width: 1.25rem;
+  height: 1.25rem;
+  place-items: center;
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+html[data-theme="light"] .black-friday-card [class~="text-white"],
+html[data-theme="light"] .black-friday-card [class*="text-white/"] {
+  color: rgba(255, 250, 245, 0.9) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
