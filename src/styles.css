@@ -171,6 +171,12 @@ html[data-theme="light"] .glow-button-primary {
   filter: brightness(1.12);
 }
 
+.black-friday-dismiss {
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.12);
+}
+
 .theme-toggle {
   color: var(--foreground);
 }

@@ -495,6 +495,9 @@ export function Navbar({
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [bannerVisible, setBannerVisible] = useState(
+    () => sessionStorage.getItem("black-friday-banner-dismissed") !== "true",
+  );
   const [active, setActive] = useState("home");
 
   useEffect(() => {
@@ -522,16 +525,33 @@ export function Navbar({
   return (
     <>
       <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "pb-2" : "pb-4"}`}>
-        <button
-          type="button"
-          onClick={() => scrollTo("black-friday")}
-          data-testid="button-black-friday-banner"
-          className="black-friday-banner flex min-h-9 w-full items-center justify-center gap-2 px-3 py-2 text-center text-[10px] font-extrabold uppercase tracking-[0.12em] text-white sm:text-xs"
-        >
-          <Flame className="h-3.5 w-3.5 flex-shrink-0" />
-          <span>🔥 Black Friday 🖤 · 9 websites · $60 each</span>
-          <span className="hidden rounded-full border border-white/35 px-2 py-0.5 text-[9px] sm:inline">See offer</span>
-        </button>
+        {bannerVisible && (
+          <div className="black-friday-banner relative flex min-h-9 w-full items-center justify-center px-10 py-1.5">
+            <button
+              type="button"
+              onClick={() => scrollTo("black-friday")}
+              data-testid="button-black-friday-banner"
+              className="inline-flex items-center justify-center gap-2 text-center text-[9px] font-extrabold uppercase tracking-[0.1em] text-white sm:text-xs sm:tracking-[0.12em]"
+            >
+              <Flame className="h-3.5 w-3.5 flex-shrink-0" />
+              <span>🔥 Black Friday 🖤 · 9 websites · $60 each</span>
+              <span className="hidden rounded-full border border-white/35 px-2 py-0.5 text-[9px] sm:inline">See offer</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                sessionStorage.setItem("black-friday-banner-dismissed", "true");
+                setBannerVisible(false);
+              }}
+              aria-label="Dismiss Black Friday banner"
+              title="Dismiss promotion"
+              data-testid="button-dismiss-black-friday-banner"
+              className="black-friday-dismiss absolute right-2 inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-white/20 sm:right-4"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
         <nav className={`mx-auto flex max-w-6xl items-center justify-between rounded-full px-4 sm:px-5 py-3 mx-3 sm:mx-auto transition-all duration-500 ${scrolled ? "glass border border-white/10 shadow-[0_10px_40px_-20px_rgba(10,132,255,0.5)]" : "border border-transparent"}`}>
           <button
             onClick={() => scrollTo("home")}
@@ -760,7 +780,7 @@ export function Hero() {
         </div>
 
         {/* Stats */}
-        <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
+        <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
           {[
             { val: "50+", label: "Websites Built",    delay: 0   },
             { val: "3+",  label: "Years Experience",  delay: 120 },
@@ -772,7 +792,7 @@ export function Hero() {
         </div>
 
         {/* Scroll hint */}
-        <div className="mt-14 flex justify-center" style={{ animation: "fade-in 1s 1s ease both" }}>
+        <div className="mt-10 flex justify-center" style={{ animation: "fade-in 1s 1s ease both" }}>
           <button
             onClick={() => scrollTo("about")}
             className="flex flex-col items-center gap-1 text-white/30 hover:text-white/60 transition-colors group"
@@ -790,7 +810,7 @@ export function Hero() {
 export function AboutSection() {
   const ref = useReveal<HTMLDivElement>();
   return (
-    <section id="about" className="relative py-20 sm:py-28">
+    <section id="about" className="relative py-16 sm:py-20">
       <div
         aria-hidden
         className="absolute inset-0 -z-10"
@@ -962,14 +982,14 @@ const SERVICES = [
 export function ServicesSection() {
   const ref = useStaggerReveal<HTMLDivElement>(90);
   return (
-    <section id="services" className="relative py-20 sm:py-28">
+    <section id="services" className="relative py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-6">
         <SectionTitle
           kicker="Services"
           title={<>What I <span className="text-gradient">Build</span></>}
           subtitle="Everything you need to launch a serious online presence."
         />
-        <div ref={ref} className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div ref={ref} className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {SERVICES.map(({ icon: Icon, title, desc, color }) => (
             <TapCard
               key={title}
@@ -1158,7 +1178,7 @@ function ProjectCard({ p }: { p: typeof PROJECTS[0] }) {
 export function ProjectsSection() {
   const ref = useStaggerReveal<HTMLDivElement>(120);
   return (
-    <section id="projects" className="relative py-20 sm:py-28">
+    <section id="projects" className="relative py-16 sm:py-20">
       <div
         aria-hidden
         className="absolute inset-0 -z-10 pointer-events-none"
@@ -1171,7 +1191,7 @@ export function ProjectsSection() {
           subtitle="Real client websites — built, live, and converting. Click any card to visit live."
         />
 
-        <div ref={ref} className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div ref={ref} className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {PROJECTS.map((p) => (
             <ProjectCard key={p.url} p={p} />
           ))}
@@ -1246,7 +1266,7 @@ export function PricingSection() {
   const ref = useReveal<HTMLDivElement>();
 
   return (
-    <section id="pricing" className="relative py-20 sm:py-28">
+    <section id="pricing" className="relative py-16 sm:py-20">
       <div
         aria-hidden
         className="absolute inset-0 -z-10"
@@ -1428,7 +1448,7 @@ function Marquee({ items, direction }: { items: typeof REVIEWS; direction: "left
 
 export function ReviewsSection() {
   return (
-    <section id="reviews" className="relative py-20 sm:py-28 overflow-hidden">
+    <section id="reviews" className="relative py-16 sm:py-20 overflow-hidden">
       <div className="mx-auto max-w-6xl px-6">
         <SectionTitle
           kicker="Client Love"
@@ -1436,7 +1456,7 @@ export function ReviewsSection() {
           subtitle="Real feedback from doctors, founders and business owners I've worked with."
         />
       </div>
-      <div className="mt-16 space-y-6">
+      <div className="mt-12 space-y-4">
         <Marquee items={REVIEWS} direction="left" />
         <Marquee items={[...REVIEWS].reverse()} direction="right" />
       </div>
@@ -1507,7 +1527,7 @@ const PROCESS_STEPS: { num: string; icon: LucideIcon; title: string; desc: strin
 export function ProcessSection() {
   const ref = useStaggerReveal<HTMLDivElement>(80);
   return (
-    <section id="process" className="relative py-20 sm:py-28">
+    <section id="process" className="relative py-16 sm:py-20">
       <div
         aria-hidden
         className="absolute inset-0 -z-10 pointer-events-none"
@@ -1520,7 +1540,7 @@ export function ProcessSection() {
           subtitle="7 simple steps — transparent, pressure-free, done entirely on WhatsApp."
         />
 
-        <div ref={ref} className="mt-14 relative">
+        <div ref={ref} className="mt-12 relative">
           {/* Vertical timeline line */}
           <div
             aria-hidden
@@ -1669,7 +1689,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
 
 export function FAQSection() {
   return (
-    <section id="faq" className="relative py-20 sm:py-28">
+    <section id="faq" className="relative py-16 sm:py-20">
       <div
         aria-hidden
         className="absolute inset-0 -z-10"
@@ -1700,7 +1720,7 @@ export function FAQSection() {
 /* ============ Contact ============ */
 export function ContactSection() {
   return (
-    <section id="contact" className="relative py-20 sm:py-28">
+    <section id="contact" className="relative py-16 sm:py-20">
       {/* Background glow */}
       <div
         aria-hidden
